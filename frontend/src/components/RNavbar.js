@@ -4,7 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 
 function HomeNavbar() {
-    const clientId = '386932037035-k8v833noqjk7m4auae0t83vnkrqvvg3t.apps.googleusercontent.com';
+    const clientId = 'client-ID';
     const logOut = () => {
         const auth2 = window.gapi.auth2.getAuthInstance()
         let tokens = localStorage.getItem("token")
