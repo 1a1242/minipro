@@ -39,3 +39,26 @@ For better user experiance we used mdb-react-ui-kit for the new publications pag
 Here, we have added some publications data of the college into the database from the web application.
 The data used is the college publications data.
 
+# Steps to run the forked repository.
+>**_NOTE :_** Make sure your system have following installed before you run the project 
+> - VSCode latest version
+> - NodeJS
+> - MongoDB
+>
+>Make sure you have your own
+> 1. Google Client Id
+> 2. MongoDB Coneection string.
+>
+>replace the ` Client-ID ` with your google client id and ` connection-string ` with your mongoDB connection string
+
+  - Fork the repository.
+  - Clone to the forked repository in your local sysytem.
+  - Open the code in vscode.
+  - Two modes of running.
+    - Frontend running.
+      - Open the terminal and type the command `cd frontend` and then `npm i --legacy-peer-deps or npm install --legacy-peer-deps`
+      - After successfull installation run the command ` npm start ` to run your frontend.
+    - Backend running.
+      - Open the terminal and type the command `cd backend` and then `npm i or npm install `
+      - After successfull installation eun the command ` npm run dev ` to run your backend.
+
