@@ -19,7 +19,7 @@ function Login() {
     // const [ profile, setProfile ] = useState(null);
     const [ login, setLogin] = useState("")
     const [token, setToken] = useState(localStorage.getItem("token")||"")
-    const clientId = '386932037035-k8v833noqjk7m4auae0t83vnkrqvvg3t.apps.googleusercontent.com';
+    const clientId = 'client-ID';
     console.log(token)
     if(token!==""){
         navigate("/home");
