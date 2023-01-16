@@ -8,10 +8,10 @@ The resources required for developing this project include:
   4. NodeJS
   
 The whole project is divided into 4 modules:
-Module 1: Landing Page
-Module 2: Publications Page
-Module 3: Data Insertion Page
-Module 4: Data Population
+  * Module 1: Landing Page
+  * Module 2: Publications Page
+  * Module 3: Data Insertion Page
+  * Module 4: Data Population 
 
 ## **MODULE-1: Landing Page**
 
