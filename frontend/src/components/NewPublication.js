@@ -18,6 +18,14 @@ import { Button } from '@mui/material';
 import Service from '../Service/http';
 import HelpModal from './HelpModal';
 import DatePicker from 'react-datepicker';
+import { useSelector } from 'react-redux';
+// aa componenets lo files create chesi do u
+// backend lo aithe db folder lo files emo schema kosam
+// router lo routes kosam like ineer routes kosam
+// lib lo controller code rasko slow come wait
+//mongo connect cheskunta okk
+
+// login page format actual login page ippudu ela undo alane undali kavali anthe peddadi chesko
 
 function FirstData() {
     // const classes = useStyles();
@@ -765,13 +773,12 @@ function FirstData() {
         }
         console.log("IN HANDLE CHANGE", body)
     }
-    useEffect(() => {
-        let tokens = localStorage.getItem("token")
-        console.log("tokens")
-        if (!tokens) {
-            navigate("/login")
-        }
+    useEffect(()=>{
+    var a=localStorage.getItem('status')
+    if(a=='false'){
+        navigate("../")}
     })
+    if(localStorage.getItem('status')=='true'){
     return (
         <>
             <Modal show={show} onHide={handleClose} size="xl">
@@ -1215,7 +1222,7 @@ function FirstData() {
                 </MDBContainer>
             </div>
         </>
-    );
+    )};
 }
 
 export default FirstData;

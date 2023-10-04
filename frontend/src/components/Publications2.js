@@ -18,6 +18,7 @@ import { Portal } from "react-overlays";
 import Modal from 'react-bootstrap/Modal';
 import HelpModal from "./HelpModal";
 import { Center } from "@mantine/core";
+import { useSelector } from "react-redux";
 
 
 const ReactTableFixedColumns = withFixedColumns(ReactTable);
@@ -118,14 +119,13 @@ function Publications2() {
         setPerPage(10)
         setPageNo(1)
     }
-
+    const login=useSelector(state=>state.Login)
     useEffect(() => {
-        // console.log("IN USEEFFECT")
-        // setShow(false)
-        let tokens = localStorage.getItem("token")
-        if (!tokens) {
-            navigate("/login")
-        }
+    var a=localStorage.getItem('status')
+    if(a=='false'){
+        navigate("../")
+    }
+
         service.get("api/data?title=" + publicationFilterValue + "&branch=" + branchFilterValue + "&username=" + publishedByFilterValue + "&cjb=" + (c_j_bFilterValue==="ALL"?"":c_j_bFilterValue) + "&year=" + yearFilterValue + "&nationality=" + nationalityFilterValue + "&scl=" + scopusFilterValue + "&author_no=" + (authorsFilterValue === "ALL" ? "" : authorsFilterValue) + "&page=" + pageNo + "&limit=" + perPage + "&startDate=" + startDate + "&endDate=" + endDate).then((json) => {
             console.log("JSON", json)
             setData(json.docs);
@@ -148,6 +148,7 @@ function Publications2() {
         });
     }, [getApi])
 
+    if(localStorage.getItem('status')=='true'){
     return (
 
         <>
@@ -591,6 +592,6 @@ function Publications2() {
                 <div><select name="pagesize" id="pagesize" onChange={(e) => { setPerPage(e.target.value); setGetApi(getApi + 1); setPageNo(1) }}><option value={10}>10</option><option value={20}>20</option><option value={50}>50</option><option value={100}>100</option><option value={0}>ALL</option></select></div>
             </div>
         </>
-    );
+    )};
 }
 export default Publications2;
