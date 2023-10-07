@@ -9,12 +9,16 @@ import FirstData from "./components/NewPublication";
 import FirstData1 from "./components/NewPublication1";
 import Publications1 from "./components/Publications1";
 import Publications2 from "./components/Publications2";
+import { MantineProvider } from '@mantine/core';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Notifications } from "@mantine/notifications";
 
 function App() {
   return (
-    
+    <MantineProvider>
+      
     <div className="App">
+      <Notifications position="top-right" zIndex={1000}/>
       
       <BrowserRouter>
         <Routes>
@@ -28,6 +32,9 @@ function App() {
         </Routes>
       </BrowserRouter>
     </div>
+    {/* </NotificationsProvider> */}
+    </MantineProvider>
+    
   );
 }
 

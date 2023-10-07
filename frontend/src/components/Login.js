@@ -19,7 +19,7 @@ function Login() {
     // const [ profile, setProfile ] = useState(null);
     const [ login, setLogin] = useState("")
     const [token, setToken] = useState(localStorage.getItem("token")||"")
-    const clientId = '386932037035-k8v833noqjk7m4auae0t83vnkrqvvg3t.apps.googleusercontent.com';
+    const clientId = '1006405223734-89bsslid5t5ivhaspa7qpgp12v17d7f8.apps.googleusercontent.com';
     console.log(token)
     if(token!==""){
         navigate("/home");
@@ -112,6 +112,18 @@ function Login() {
 }
 
 export default Login;
+// app.route('/users', methods=["POST"])
+// def users():
+//   print("users endpoint reached...")
+//   received_data = request.get_json()
+//   print(f"received data: {received_data}")
+//   message = received_data['data']
+//   return_data = {
+//   "status": "success",
+//   "message": f"received: {message}"
+//   }
+//   return flask.Response(response=json.dumps(return_data), status=201)
+
 // import { useEffect } from 'react';
 // import React, { useState, useEffect } from 'react';
 // function Login() {

@@ -12,6 +12,7 @@ from 'mdb-react-ui-kit';
 import HomeNavbar from "./RNavbar";
 
 import { useNavigate } from 'react-router-dom';
+import { Notifications, showNotification } from '@mantine/notifications';
 
 function Home() {
     const navigate = useNavigate();
@@ -19,8 +20,17 @@ function Home() {
         let tokens = localStorage.getItem("token")
     console.log("tokens")
     if(!tokens){
-        navigate("/login")
+      navigate("/login")
     }
+    else{
+      console.log("ELSE")
+    showNotification({
+
+        title: 'Notification Title',
+        message: 'This is a notification message.',
+
+    })
+  }
     })
     
   return (

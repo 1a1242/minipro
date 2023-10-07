@@ -10,10 +10,11 @@ import HomeNavbar from "./RNavbar";
 import { useNavigate } from "react-router-dom";
 import { CSVLink } from "react-csv";
 import { useDownloadExcel } from 'react-export-table-to-excel';
-import { Button } from "@mui/material";
+import { Button, Tooltip, Zoom } from "@mui/material";
 import { ExportCSV } from "./ExportCSV";
 import { MDBCol, MDBRow } from "mdb-react-ui-kit";
 import DatePicker from 'react-datepicker';
+import { IconEdit, IconTrash } from '@tabler/icons-react'
 import { Portal } from "react-overlays";
 import Modal from 'react-bootstrap/Modal';
 import HelpModal from "./HelpModal";
@@ -30,6 +31,7 @@ function Publications2() {
     let [color, Setcolor] = useState('');
     let [background, SetBackground] = useState("#81C784");
     let [textColor, SetTextcolor] = useState("");
+    let [isAdmin, setIsAdmin] = useState(true);
 
     /*Tells when the api need to be called*/
     let [getApi, setGetApi] = useState(0);
@@ -50,6 +52,7 @@ function Publications2() {
     let [endDate, setEndDate] = useState("")
 
     const [show, setShow] = useState(false)
+    const [showEdit, setShowEdit] = useState(false)
     let [jobs, setJobs] = useState(["ALL","C","J","B","BC"])
     let [authors, setAuthors] = useState(["ALL", "Single", "First", "Second", "Third", "Fourth", "Fifth", "Others"])
     // let [verdicts, setVerdict] = useState(['All',"ACCEPTED", "WRONG ANSWER","TIME LIMIT EXCEEDED","RUNTIME ERROR","PENDING","OTHER","COMPILATION ERROR"]);
@@ -64,29 +67,10 @@ function Publications2() {
     // let [endYear, setEndYear] = useState("");
     let [Required, setRequired] = useState(false)
     const handleClose = () => setShow(false);
-    const handleShow = () => { setShow(true) };
+    const handleShow = () => { setShow(true); };
     const handleSearch = () => { if (startDate && endDate) { setYearFilterValue("") ; setGetApi(getApi + 1); setShow(false)} };
 
-    // const CalendarContainer = ({ children }) => {
-    //     const el = document.getElementById("calendar-portal");
-
-    //     return <Portal container={el}>{children}</Portal>;
-    // };
-
-
-
-
-    /*List for Filter Dropdown*/
-    // let yesNo = ['All', 'Yes', 'No']
-
-    const formRef = useRef();
-    const DownloadData = [];
-
-    // const onDownload = useDownloadExcel({
-    //     currentTableRef: tableRef.current,
-    //     filename: 'Users table',
-    //     sheet: 'Users'
-    // })
+  
 
     const handleChange = (event, v) => {
         // console.log(v)
@@ -126,7 +110,7 @@ function Publications2() {
         if (!tokens) {
             navigate("/login")
         }
-        service.get("api/data?title=" + publicationFilterValue + "&branch=" + branchFilterValue + "&username=" + publishedByFilterValue + "&cjb=" + (c_j_bFilterValue==="ALL"?"":c_j_bFilterValue) + "&year=" + yearFilterValue + "&nationality=" + nationalityFilterValue + "&scl=" + scopusFilterValue + "&author_no=" + (authorsFilterValue === "ALL" ? "" : authorsFilterValue) + "&page=" + pageNo + "&limit=" + perPage + "&startDate=" + startDate + "&endDate=" + endDate).then((json) => {
+        service.get("api/publications/data?title=" + publicationFilterValue + "&branch=" + branchFilterValue + "&username=" + publishedByFilterValue + "&cjb=" + (c_j_bFilterValue==="ALL"?"":c_j_bFilterValue) + "&year=" + yearFilterValue + "&nationality=" + nationalityFilterValue + "&scl=" + scopusFilterValue + "&author_no=" + (authorsFilterValue === "ALL" ? "" : authorsFilterValue) + "&page=" + pageNo + "&limit=" + perPage + "&startDate=" + startDate + "&endDate=" + endDate).then((json) => {
             console.log("JSON", json)
             setData(json.docs);
             setPageData(json.limit == 0 ? 1 : json.pages)
@@ -151,7 +135,7 @@ function Publications2() {
     return (
 
         <>
-            <Modal show={show} onHide={handleClose} size="md">
+           <Modal show={show} onHide={handleClose} size="md">
                 <Modal.Header closeButton>
                     <Modal.Title>Range Date Search</Modal.Title>
                 </Modal.Header>
@@ -175,7 +159,7 @@ function Publications2() {
                         />
                         <br />
                         <br /><br />
-                        <Button variant="contained" color="primary" onClick={() => { (startDate != "" && endDate != "") ? handleSearch() : setRequired(true) }}>
+                        <Button variant="contained" color="primary" onClick={() => { (startDate !== "" && endDate !== "") ? handleSearch() : setRequired(true) }}>
                             Search
                         </Button>
                     </Center>
@@ -187,6 +171,7 @@ function Publications2() {
           </Button>
         </Modal.Footer> */}
             </Modal>
+            
             <HomeNavbar />
             <div className="p-3" style={{
                 height: 0<data.length && data.length<10?"90vh":"100%",
@@ -209,10 +194,10 @@ function Publications2() {
                         <ExportCSV csvData={data} fileName={"Publications"} />
                     </MDBCol>
                     <MDBCol md="4" >
-                        <Button size="large" variant="contained" color='secondary' onClick={handleShow}>Advance Search</Button>
+                        <Button  variant="contained" color='secondary' onClick={handleShow}>Advance Search</Button>
                     </MDBCol>
                     <MDBCol md="4">
-                        <Button size="large" variant="contained" color='error' onClick={handleClear}>Clear Filter</Button>
+                        <Button  variant="contained" color='error' onClick={handleClear}>Clear Filter</Button>
                     </MDBCol>
                 </MDBRow>
                 <br />
@@ -532,7 +517,7 @@ function Publications2() {
                             //minWidth: 140
                         },
                         {
-                            Header: () => (<div>Are you author?<br /><select id="author" onChange={(e) => { setAuthorsFilterValue(e.target.value); setGetApi(getApi + 1); setPageNo(1) }} >{authors.map(verdict => { return (<option value={verdict}> {verdict} </option>) })}</select></div>),
+                            Header: () => (<div>Author Order<br /><select id="author" onChange={(e) => { setAuthorsFilterValue(e.target.value); setGetApi(getApi + 1); setPageNo(1) }} >{authors.map(verdict => { return (<option value={verdict}> {verdict} </option>) })}</select></div>),
                             accessor: "author_no",
                             //Cell: e =>{e.original.author_no},
 
@@ -575,6 +560,39 @@ function Publications2() {
                             },
                             minWidth: 420
                         },
+                        (isAdmin )? {
+                            Header: <div>Edit /<br/> Delete</div>,
+                            id: "admin",
+                            accessor: "",
+                            Cell: (row) => {
+                                //   console.log(row)
+                                return (
+                                   
+                                     <div className="button-group">
+                                        <HelpModal edit={row.original}/>
+                                       
+                                        <Tooltip arrow title="Delete" placement="top" TransitionComponent={Zoom}>
+                                     {/* <ActionIcon onClick={()=>{handleShow()}} size={25} className="button-edit"> */}
+                                         <IconTrash color="white" className="button-edit" size={23}/>
+                                     {/* </ActionIcon> */}
+                                     </Tooltip>
+                               
+                                     </div >   
+                                
+                                )
+                            },
+                            // Cell: e =>{},
+                            getProps: (state, rowInfo, column) => {
+                                return {
+                                    style: {
+                                        color: 'white',
+                                        background: "#8CAB3D",
+                                    },
+                                };
+                            },
+                            minWidth: 69,
+                            fixed: 'right'
+                        }:null
                     ]}
                     className=" -highlight text-dark h5"
                 />

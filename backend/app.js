@@ -10,8 +10,10 @@ dbConnect.connect(true)
 var app = express();
 app.use(cors());
 app.use(express.json());
-app.get('/api/data', dbLib.getData);
-app.post('/api/data', dbLib.postData)
+app.use('/api/publications',apiRouter)
+// app.get('/api/publications', dbLib.getData);
+// app.post('/api/data', dbLib.postData)
+// app.post('/api/edit')
 // app.get('/message', (req, res) => {
 //     res.json({ message: "Hello from server!" });
 // });

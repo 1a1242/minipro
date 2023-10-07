@@ -4,16 +4,29 @@ const dataModal = require('../db/testData')
 module.exports.postData =async function(req,res) {
     try{
         const myobj = req.body;
-        console.log(myobj)
+        // console.log(myobj)
         myobj.year = new Date(myobj.year)
-        dataModal.create(myobj, function(err, res) {  
+        dataModal.create(myobj, function(err, result) {  
             if (err) throw err;
             console.log("success")
+            return res.status(200).json(result);
         }
         )
     }
     catch(error){
         return res.status(500).json(error)
+    }
+}
+module.exports.editData = async function(req,res){
+    try{
+        dataModal.findOneAndReplace({_id:req.body._id},req.body,{runValidators:true}, function(err,result){
+            if(err) throw err;
+            console.log("updated");
+            return res.status(200).json({msg:"Successfully Updated"})
+        })
+    }
+    catch(err){
+        return res.status(500).json(err)
     }
 }
 
@@ -34,8 +47,8 @@ module.exports.getData = async function (req, res) {
         let endDate = req.query.endDate?new Date(req.query.endDate):0
         // let startYear = parseInt(req.query.startYear) || 0
         // let endYear = parseInt(req.query.endYear) || 0
-        // let startMonth = parseInt(req.query.startMonth) || 0
-        // let endMonth = parseInt(req.query.endMonth) || 0
+        let startMonth = startDate !== 0 ? startDate.getMonth() : 0
+        let endMonth = endDate !== 0 ? endDate.getMonth() : 0
 
         // console.log(cjb)
         let query = {};
@@ -68,7 +81,7 @@ module.exports.getData = async function (req, res) {
         }
         if(startDate !=0 && endDate!=0){
             query["year"] = {$lte: endDate, $gte: startDate}
-            // query["month"] = {$lte: endMonth+1, $gte: startMonth}
+            query["month"] = {$lte: endMonth+1, $gte: startMonth}
         }
         console.log("WHERE",query)
         if(limit==='0'){
@@ -87,9 +100,9 @@ module.exports.getData = async function (req, res) {
         dataModal.paginate(query,{page:page,limit:limit},function(err,result) {
             if (err) {console.log(err);res.status(500).send(err)}
             else{
-                console.log("Result",result)
+                // console.log("Result",result)
             // ...
-            res.json(result)
+            return res.status(200).json(result)
             // console.log("RESULT", result)
             }
           });
@@ -97,6 +110,7 @@ module.exports.getData = async function (req, res) {
         // return res.status(200).json(data);
     }
     catch(error){
+        console.log(error);
         return res.status(500).json(error)
     }
 

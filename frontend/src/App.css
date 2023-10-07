@@ -46,6 +46,16 @@
 .bg-indigo {
   background-color: #82b059;
 }
+.button-edit:hover {
+  background-color: #809d38;
+  
+  /* Add any other styles you want to change on hover */
+}
+
+.button-group{
+  display: flex;
+  gap: 8px;
+}
 
 @media (min-width: 1025px) {
   .h-custom {
