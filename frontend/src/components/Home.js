@@ -13,24 +13,21 @@ from 'mdb-react-ui-kit';
 import HomeNavbar from "./RNavbar";
 import {useSelector} from 'react-redux'
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
 import { Notifications, showNotification } from '@mantine/notifications';
-=======
 import image from './static/hompage.jpg'
 import logo from './static/bvrit-logo.jpg'
 import Reset from './Reset';
->>>>>>> ee1d2e4eb79a745944b32faf2d8e2a88d93045ff
 
 function Home() {
   const login=useSelector(state=>state.Login)
     const navigate = useNavigate();
     useEffect(()=>{
     var a=localStorage.getItem('status')
-    if(a=='false'){
+    if(a==='false'){
         navigate("../")}
     })
   
-  if(localStorage.getItem('status')=='true'){
+  if(localStorage.getItem('status')==='true'){
   return (
     <>
     <HomeNavbar/>

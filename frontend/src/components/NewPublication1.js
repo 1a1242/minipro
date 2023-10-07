@@ -269,6 +269,7 @@ function FirstData1() {
             console.log("JSON", json)
 
         }).catch((error) => {
+            
             console.log(error);
         });
         // console.log("EVENT",body)
