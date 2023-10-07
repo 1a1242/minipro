@@ -1,26 +1,24 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import { useDispatch } from 'react-redux';
+import { Signout } from './Actions';
+//import { GoogleLogin, GoogleLogout } from 'react-google-login';
 
 function HomeNavbar() {
-    const clientId = '386932037035-k8v833noqjk7m4auae0t83vnkrqvvg3t.apps.googleusercontent.com';
+    const clientId = 'client-ID';
     const logOut = () => {
-        const auth2 = window.gapi.auth2.getAuthInstance()
         let tokens = localStorage.getItem("token")
         if(tokens){
-            localStorage.removeItem("token")
-        }
-        if (auth2 != null) {
-          auth2.signOut().then(
-            auth2.disconnect().then(this.props.onLogoutSuccess)
-          )
-        }
+            localStorage.clear()
+            dispatch(Signout())
+          }
       
 };
+  const dispatch=useDispatch()
   return (
     <>
-      <Navbar>
+      <Navbar className='NavBar'>
         <Container>
           <Navbar.Brand href="/home"><img
               src={require("./static/bvrit-logo.jpg")}
@@ -34,11 +32,11 @@ function HomeNavbar() {
             <Nav.Link href="/insert">New Publication</Nav.Link>
           </Nav>
           <Nav>
-          <GoogleLogout clientId={clientId} render={renderProps => (
-       <Nav.Link href="/login"onClick={renderProps.onClick}>Logout</Nav.Link>
-    )}buttonText="Log out" onLogoutSuccess={logOut} />
+          <Nav.Link href="/changepassword">Change Password</Nav.Link>
+          <Nav.Link href="/"onClick={logOut}>Logout</Nav.Link>
+         
           </Nav>
-
+          
         </Container>
       </Navbar>
     </>

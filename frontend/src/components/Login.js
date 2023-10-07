@@ -20,7 +20,7 @@ function Login() {
     const [ login, setLogin] = useState("")
     const [token, setToken] = useState(localStorage.getItem("token")||"")
     const clientId = '1006405223734-89bsslid5t5ivhaspa7qpgp12v17d7f8.apps.googleusercontent.com';
-    console.log(token)
+    // console.log(token)
     if(token!==""){
         navigate("/home");
     }
@@ -35,8 +35,8 @@ function Login() {
     });
 
     const onSuccess = (res) => {
-        console.log(res)
-        if(res.profileObj.email.split('@')[1]==="bvrithyderabad.edu.in" && ('a'<=res.profileObj.email[0]<='z' || res.profileObj.email==="19wh1a1242@bvrithyderabad.edu.in")){
+        // console.log(res)
+        if(res.profileObj.email.split('@')[1]==="bvrithyderabad.edu.in" || ('a'<=res.profileObj.email[0]<='z' || res.profileObj.email==="19wh1a1242@bvrithyderabad.edu.in" ||  res.profileObj.email==="your mail id iste login aitadi leda avad")){
             // console.log("TRUE")
             // setProfile(res.profileObj);
             navigate("/home");
@@ -77,27 +77,21 @@ function Login() {
         width: "100vw",
       "backgroundColor":"#c5d299", paddingTop:"90px"}}>
 
-      <MDBCard style={{ maxHeight: '390px', maxWidth: '900px'}}>
+      <MDBCard style={{ maxHeight: '80%', maxWidth: '80%'}}>
         <MDBRow className='g-0'>
 
-          <MDBCol md='8'>
-          <MDBCardImage src={require('./static/hompage.jpg')} fluid />
+          <MDBCol md='6' style={{top:'10%'}}>
+          <MDBCardImage src={require('./static/hompage.jpg')} style={{height:'500px',width:'600px'}}  />
           </MDBCol>
-
-          <MDBCol md='4'>
-          <MDBCardBody>
-          <MDBCardImage src={require('./static/bvrit-logo.jpg')} fluid />
-            <MDBCardTitle style={{"fontSize":"px100"}}>Research Publications Search Engine</MDBCardTitle>
+          <MDBCol md='5'>
+          <MDBCardBody position='center' >
+          <MDBCardImage style={{height:'50%',width:'80%'}} position='center' src={require('./static/bvrit-logo.jpg')} />
+            <MDBCardTitle style={{"fontSize":"px80"}}>Research Publications Search Engine</MDBCardTitle>
             {login==="FAILED"?<MDBCardText style={{"color":"red"}}>Not AUTHORIZED User</MDBCardText>:""}
-            <GoogleLogin
-                    clientId={clientId}
-                    buttonText="Sign in with Google"
-                    onSuccess={onSuccess}
-                    onFailure={onFailure}
-                    cookiePolicy={'single_host_origin'}
-                    isSignedIn={true}
-                    hostedDomain={"bvrithyderabad.edu.in"}
-                />
+            <div>
+              <div style={{fontSize:'30px'}}>Login</div>
+              
+            </div>
           </MDBCardBody>
           </MDBCol>
 
@@ -108,7 +102,7 @@ function Login() {
 
     </>
 
-  );
+ ) 
 }
 
 export default Login;

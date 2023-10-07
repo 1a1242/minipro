@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import Service from "../Service/http";
 import HomeNavbar from "./RNavbar";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 const ReactTableFixedColumns = withFixedColumns(ReactTable);
 function Trial1(){
     const service = new Service();
@@ -55,13 +56,12 @@ function Trial1(){
     setGetApi(getApi+1)
 
   }
-
+  const login=useSelector(state=>state.Login)
   useEffect(()=>{
     // console.log("IN USEEFFECT")
-    let tokens = localStorage.getItem("token")
-    if(!tokens){
-        navigate("/login")
-    }
+    if(!login.logged){
+      navigate("/")
+  }
     service.get("api/data?title="+publicationFilterValue+"&branch="+branchFilterValue+"&username="+publishedByFilterValue+"&cjb="+c_j_bFilterValue+"&year="+yearFilterValue+"&nationality="+nationalityFilterValue+"&scl="+scopusFilterValue+"&author_no="+(authorsFilterValue==="ALL"?"":authorsFilterValue)+"&page="+pageNo+"&limit="+perPage).then((json)=>{
         console.log("JSON",json)
         setData(json.docs);
