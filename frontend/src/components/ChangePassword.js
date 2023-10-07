@@ -39,7 +39,7 @@ function Changepass(){
             </tr>
             <tr>
                 <td > 
-                    <PasswordInput width={100} onChange={(e)=>{setOld(e.target.value)}}/>
+                    <input type='password' className='Left_full'  width={100} onChange={(e)=>{setOld(e.target.value)}}/>
                 </td>
             </tr>
             <tr>
@@ -49,7 +49,7 @@ function Changepass(){
             </tr>
             <tr>
                 <td> 
-                    <PasswordInput width={100} onChange={(e)=>{setNewp(e.target.value)}}/>
+                    <input type='password' className='Left_full' width={100} onChange={(e)=>{setNewp(e.target.value)}}/>
                 </td>
             </tr>
             <tr>
@@ -59,13 +59,14 @@ function Changepass(){
             </tr>
             <tr>
                 <td> 
-                    <PasswordInput width={100} onChange={(e)=>{setConfirm(e.target.value)}}/>
+                    <input type='password' className='Left_full' width={100} onChange={(e)=>{setConfirm(e.target.value)}}/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <br/>
-                   <center><Button
+                   <center><button
+                   className='Button'
                    onClick={
                     async ()=>{
                         var pass=sha512(old)
@@ -87,7 +88,7 @@ function Changepass(){
                         })
                         .catch((e)=>{window.alert('Wrong Current Password')})
                     }
-                   }>Change</Button></center> 
+                   }>Change</button></center> 
                 </td>
             </tr>
             </tbody>

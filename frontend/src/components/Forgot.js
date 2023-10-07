@@ -34,7 +34,8 @@ function Forgot(){
             <tr>
                 <td colSpan={3}>
                     <br/>
-                    <Button 
+                    <button
+                    className="Button" 
                     onClick={()=>{
                         var e=Email+'@bvrithyderabad.edu.in'
                         axios.post('http://localhost:8000/forgot',{Email:e})
@@ -44,7 +45,7 @@ function Forgot(){
                         .catch((e)=>{
                             window.alert('Not Found')})
                     }}
-                    >Verify</Button>
+                    >Verify</button>
                 </td>
             </tr>
             <br/>
