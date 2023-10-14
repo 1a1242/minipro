@@ -65,7 +65,7 @@ function Register(){
             </tr>
             <tr>
                  <td colSpan={3}>
-                    <TextInput width={100} onChange={(e)=>{setName(e.target.value)}}/>
+                    <input className='Left_full' width={100} onChange={(e)=>{setName(e.target.value)}}/>
                 </td>
                 </tr>
             <tr>
@@ -75,7 +75,7 @@ function Register(){
             </tr>
             <tr>
                 <td>
-                    <TextInput onChange={(e)=>{
+                    <input onChange={(e)=>{
                         setEmail(e.target.value)}
                         }
                     />
@@ -91,7 +91,7 @@ function Register(){
             </tr>
             <tr>
                 <td colSpan={3}> 
-                    <PasswordInput width={100} onChange={(e)=>{setPassword(e.target.value)}} />
+                    <input  className='Left_full' type='password' width={100} onChange={(e)=>{setPassword(e.target.value)}} />
                 </td>
             </tr>
             <tr>
@@ -101,13 +101,13 @@ function Register(){
             </tr>
             <tr>
                 <td colSpan={3}> 
-                    <PasswordInput width={100} onChange={(e)=>{setCpass(e.target.value)}}/>
+                    <input  className='Left_full' type='password' width={100} onChange={(e)=>{setCpass(e.target.value)}}/>
                 </td>
             </tr>
             <tr>
                 <td colSpan={3}>
                     <br/>
-                    <Button
+                    <button className='Button'
                     onClick={()=>{
                         var s=check()
                         if (s=='')
@@ -120,7 +120,7 @@ function Register(){
                             window.alert(s)
                         }
                     }}
-                    >Register</Button>
+                    >Register</button>
                 </td>
             </tr>
             <tr>

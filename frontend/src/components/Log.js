@@ -50,14 +50,15 @@ function Login(){
             </tr>
             <tr>
                 <td colSpan={3}> 
-                    <PasswordInput width={100} onChange={(e)=>{
+                    <input  className='Left_full' type='password' placeholder='Password' onChange={(e)=>{
                         setPassword(e.target.value)}}/>
                 </td>
             </tr>
             <tr>
                 <td colSpan={3}>
                     <br/>
-                    <Button
+                    <button
+                    className='Button'
                     onClick={()=>{
                         var email=Email+'@bvrithyderabad.edu.in'
                         var pas=sha512(Password)
@@ -72,7 +73,7 @@ function Login(){
                         })
                         .catch((e)=>{window.alert('Invalid  Credentials')})
                     }}
-                    >Login</Button>
+                    >Login</button>
                 </td>
             </tr>
             <br/>

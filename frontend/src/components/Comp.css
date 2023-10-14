@@ -168,3 +168,13 @@ td,tr{
     background-color: blue;
     background-image: url("./static/pool.jpg");
 }
+
+
+.Left_full{
+    position: relative;
+    width:100%;
+}
+
+.Button{
+    background-color: rgb(0,150,255);
+}
