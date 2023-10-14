@@ -1,11 +1,12 @@
 import React from "react";
 import './Comp.css'
-import { TextInput,PasswordInput,Button } from "@mantine/core";
+import { TextInput,PasswordInput } from "@mantine/core";
 import { useDispatch } from "react-redux";
 import { Login } from "./Actions";
 import axios from 'axios'
 import { useState,useEffect } from "react";
 import {sha512} from 'js-sha512'
+import { Button } from "@mui/material";
 function Register(){
     const dispatch=useDispatch()
     const [Name,setName]=useState('')
@@ -51,8 +52,8 @@ function Register(){
 
     return(
         <div>
-        <table >
-            <tbody>
+        <table style={{width:'100%',height:'100%',color:'#6C9449', padding:'20px'}}>
+        <tbody>
             <tr>
                 <td colSpan={3}><div className="Heading">
                 Sign up for an account
@@ -104,10 +105,30 @@ function Register(){
                     <input  className='Left_full' type='password' width={100} onChange={(e)=>{setCpass(e.target.value)}}/>
                 </td>
             </tr>
+            <br/>
             <tr>
-                <td colSpan={3}>
-                    <br/>
-                    <button className='Button'
+                <td colSpan={1}>
+
+<a id="link1" className="link_pages" onClick={()=>dispatch(Login())}>Login</a>
+                </td>
+                <td colSpan={2}>
+                    
+                    <Button variant="contained" color='secondary' onClick={
+                        ()=>{
+                            var s=check()
+                            if (s=='')
+                            {
+                                console.log('Ok')
+                               send(Name,Email,Password)
+                            }
+                            else
+                            {
+                                window.alert(s)
+                            }
+                        }
+                    }>Register</Button>
+
+                    {/* <button className='Button'
                     onClick={()=>{
                         var s=check()
                         if (s=='')
@@ -120,15 +141,14 @@ function Register(){
                             window.alert(s)
                         }
                     }}
-                    >Register</button>
+                    >Register</button> */}
                 </td>
             </tr>
-            <tr>
-                <td colSpan={3}>
-                <a id="link1" className="link_pages" onClick={()=>dispatch(Login())}>Login</a>
-                </td>
+          
                 
-            </tr>
+           
+                
+            
             </tbody>
         </table>
         </div>

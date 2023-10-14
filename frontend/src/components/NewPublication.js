@@ -878,13 +878,12 @@ function FirstData() {
     }
     // console.log("IN HANDLE CHANGE", body)
   };
-  useEffect(() => {
-    let tokens = localStorage.getItem("token");
-    // console.log("tokens")
-    if (!tokens) {
-      navigate("/login");
-    }
-  }, []);
+  // const navigate = useNavigate();
+    useEffect(()=>{
+    var a=localStorage.getItem('status')
+    if(a==='false'){
+        navigate("../")}
+    })
   return (
     <>
       <Modal show={show} onHide={handleClose} size="xl">

@@ -725,12 +725,11 @@ function FirstData1() {
         }
         console.log("IN HANDLE CHANGE", body)
     }
-    useEffect(() => {
-        let tokens = localStorage.getItem("token")
-        console.log("tokens")
-        if (!tokens) {
-            navigate("/login")
-        }
+    
+    useEffect(()=>{
+    var a=localStorage.getItem('status')
+    if(a==='false'){
+        navigate("../")}
     })
     return (
         <>

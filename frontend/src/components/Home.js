@@ -17,6 +17,7 @@ import { Notifications, showNotification } from '@mantine/notifications';
 import image from './static/hompage.jpg'
 import logo from './static/bvrit-logo.jpg'
 import Reset from './Reset';
+import { Center } from '@mantine/core';
 
 function Home() {
   const login=useSelector(state=>state.Login)
@@ -32,7 +33,7 @@ function Home() {
     <>
     <HomeNavbar/>
     
-    {/* <div class="col d-flex justify-content-center" style={{height: "90vh",
+    <div class="col d-flex justify-content-center" style={{height: "90vh",
         width: "100vw",
       "backgroundColor":"#c5d299", paddingTop:"90px"}}>
 
@@ -43,19 +44,18 @@ function Home() {
           <MDBCardImage src={require('./static/hompage.jpg')} fluid />
           </MDBCol>
 
-          <MDBCol md='4'>
-          <MDBCardBody>
-          <MDBCardImage src={require('./static/bvrit-logo.jpg')} fluid />
-            <MDBCardTitle style={{"fontSize":"px100"}}>Research Publications Search Engine</MDBCardTitle>
-            <Main/>
+          <MDBCol md='4' >
+          <MDBCardBody style={{'display': 'flex', justifyContent: 'center',alignItems: 'center',height: '100%', width:'100%'}}>
+          {/* <MDBCardImage src={require('./static/bvrit-logo.jpg')} fluid /> */}
+            <p style={{"fontSize":"35px",'color':'#6C9449'}}>Research Publications Search Engine</p>
           </MDBCardBody>
           </MDBCol>
 
         </MDBRow>
       </MDBCard>
 
-    </div> */}
-    <div id='login_back'>
+    </div>
+    {/* <div id='login_back'>
             <div id='login_fore_row'>
                 <div id='login_fore_col1'> 
                     <img id='homepage_image' src={image}/>
@@ -74,7 +74,7 @@ function Home() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> */}
     </>
   
   )};}

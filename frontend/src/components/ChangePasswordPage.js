@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import image from './static/hompage.jpg'
 import logo from './static/bvrit-logo.jpg'
 import Changepass from './ChangePassword';
+import { MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCol, MDBRow } from 'mdb-react-ui-kit';
 
 function ChangePassword() {
   const login=useSelector(state=>state.Login)
@@ -20,7 +21,31 @@ function ChangePassword() {
     
     <>
     <HomeNavbar/>
-    <div id='login_back'>
+    <div class="col d-flex justify-content-center" style={{height: "90vh",
+        width: "100vw",
+      "backgroundColor":"#c5d299", paddingTop:"90px"}}>
+
+      <MDBCard style={{ maxHeight: '380px', maxWidth: '900px'}}>
+        <MDBRow className='g-0'>
+
+          <MDBCol md='8'>
+          <MDBCardImage src={require('./static/hompage.jpg')} fluid />
+          </MDBCol>
+
+          <MDBCol md='4' >
+            <MDBCardBody style={{'display': 'flex', justifyContent: 'center',alignItems: 'center',height: '100%', width:'100%'}}>
+                <Changepass/>
+          {/* <MDBCardBody style={{'display': 'flex', justifyContent: 'center',alignItems: 'center',height: '100%', width:'100%'}}>
+          {/* <MDBCardImage src={require('./static/bvrit-logo.jpg')} fluid /> 
+            <p style={{"fontSize":"35px",'color':'#6C9449'}}>Research Publications Search Engine</p> */}
+          </MDBCardBody>
+          </MDBCol>
+
+        </MDBRow>
+      </MDBCard>
+
+    </div>
+    {/* <div id='login_back'>
             <div id='login_fore_row'>
                 <div id='login_fore_col1'> 
                     <img id='homepage_image' src={image}/>
@@ -37,7 +62,7 @@ function ChangePassword() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> */}
     </>
     
   )};

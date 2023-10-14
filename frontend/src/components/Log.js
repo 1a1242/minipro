@@ -1,12 +1,13 @@
 import React from "react";
 import './Comp.css'
-import { TextInput,PasswordInput,Button } from "@mantine/core";
+import { TextInput,PasswordInput } from "@mantine/core";
 import { useDispatch,useSelector } from "react-redux";
 import { Register,Forgot, Signin, Signout } from "./Actions";
 import { useState,useEffect} from "react";
 import {useNavigate} from 'react-router-dom'
 import axios from "axios";
 import { sha512 } from "js-sha512";
+import { Button } from "@mui/material";
 function Login(){
     const [Email,setEmail]=useState('')
     const [Password,setPassword]=useState('')
@@ -21,7 +22,7 @@ function Login(){
     },[])
     return(
         <div>
-        <table >
+        <table style={{width:'90%',height:'100%',color:'#6C9449'}}>
             <tbody>
             <tr>
                 <td colSpan={3}><div className="Heading">
@@ -42,7 +43,7 @@ function Login(){
                     <input placeholder="@bvrithyderabad.edu.in" disabled/>
                 </td>
             </tr>
-            <br/>
+            <br/>   
             <tr>
                 <td>
                     <label id='label'>Password</label>
@@ -57,7 +58,21 @@ function Login(){
             <tr>
                 <td colSpan={3}>
                     <br/>
-                    <button
+                    <Button variant="contained" color='secondary' onClick={()=>{
+                        var email=Email+'@bvrithyderabad.edu.in'
+                        var pas=sha512(Password)
+                        axios.post('http://localhost:8000/userlogin',{Email:email,Password:pas})
+                        .then((res)=>{
+                            console.log('Users are',res.data.Email,res.data.Name)
+                            dispatch(Signin(res.data.Email,res.data.Name))
+                            localStorage.setItem('status',true)
+                            localStorage.setItem('Email',res.data.Email)
+                            localStorage.setItem('Name',res.data.Name)
+                            navigate('../home')
+                        })
+                        .catch((e)=>{window.alert('Invalid  Credentials')})
+                    }}>Login</Button>
+                    {/* <button
                     className='Button'
                     onClick={()=>{
                         var email=Email+'@bvrithyderabad.edu.in'
@@ -73,7 +88,7 @@ function Login(){
                         })
                         .catch((e)=>{window.alert('Invalid  Credentials')})
                     }}
-                    >Login</button>
+                    >Login</button> */}
                 </td>
             </tr>
             <br/>
@@ -89,8 +104,6 @@ function Login(){
             </tbody>
         </table>
         </div>
-            
-
 
             /* 
             <div id="input_email">

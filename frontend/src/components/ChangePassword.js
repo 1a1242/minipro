@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import './Comp.css'
-import {Button,PasswordInput } from "@mantine/core";
+import {PasswordInput } from "@mantine/core";
 import axios from "axios";
 import { sha512 } from "js-sha512";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 function Changepass(){
     const [old,setOld]=useState('')
     const[newp,setNewp]=useState('')
@@ -25,11 +26,11 @@ function Changepass(){
     }
     return(
         <div>
-        <table style={{width:'100%',height:'100%'}} >
+        <table style={{width:'100%',height:'100%',color:'#6C9449'}} >
             <tbody>
             <tr>
                 <td >
-                    <div className="Heading">Change Password</div>
+                    <div className="Heading" >Change Password</div>
                 </td>
             </tr>
             <tr>
@@ -65,7 +66,28 @@ function Changepass(){
             <tr>
                 <td>
                     <br/>
-                   <center><button
+                   {/* <center> */}
+                   <Button variant="contained" color='secondary' onClick={async ()=>{
+                        var pass=sha512(old)
+                        var email=localStorage.getItem('Email')
+                        axios.post('http://localhost:8000/userlogin',{Email:email,Password:pass})
+                        .then((res)=>{
+                            console.log(res)
+                           var s=check(newp,confirm)
+                           if(s=='')
+                           {
+                                var a=sha512(newp)
+                                axios.post('http://localhost:8000/changePassword',{Email:email,Password:a})
+                                window.alert('Password Changed Successfully')
+                                navigate('../home')
+                            }
+                                
+                           else
+                           {window.alert(s)}
+                        })
+                        .catch((e)=>{window.alert('Wrong Current Password')})
+                    }}>Change</Button>
+                    {/* <button
                    className='Button'
                    onClick={
                     async ()=>{
@@ -88,7 +110,7 @@ function Changepass(){
                         })
                         .catch((e)=>{window.alert('Wrong Current Password')})
                     }
-                   }>Change</button></center> 
+                   }>Change</button></center>  */}
                 </td>
             </tr>
             </tbody>

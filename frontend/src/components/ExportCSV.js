@@ -42,9 +42,7 @@ export const ExportCSV = ({ csvData, fileName }) => {
   const allChecked = values.every((value) => value.checked);
   const indeterminate = values.some((value) => value.checked) && !allChecked;
 
-  const fileType =
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-  const fileExtension = ".xlsx";
+  
   const [show1, setShow] = useState(false);
   const [download, setDownload] = useState(false);
 
@@ -135,6 +133,7 @@ export const ExportCSV = ({ csvData, fileName }) => {
               label={value.label}
               key={value.key}
               checked={value.checked}
+              color="red"
               onChange={(event) =>
                 handlers.setItemProp(
                   index,

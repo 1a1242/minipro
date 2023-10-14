@@ -40,12 +40,15 @@ function Forgotpassword(){
     return(
         <div id='forgot' style={{backgroundImage:{image}}}>
             <Container style={{display:'flex',width:'60%',height:'80%',position:'absolute',top:'10%',left:'20%',right:'20%',bottom:'10%'}}>
-            <h3 style={{position:'absolute',left:'40%'}}>Change Password</h3>
+            <h3 style={{position:'absolute',left:'35%'}}>Change Password</h3>
             <div style={{display:'flex',flexDirection:'column',position:'absolute',bottom:'10%',top:'10%',left:'30%',width:'40%'}}>
-            <PasswordInput label='New Password' placeholder="Enter new Password" onChange={(e)=>{setPassword(e.target.value)}}/>
-            <PasswordInput label='Confirm New Password' placeholder="Enter confirm password" onChange={(e)=>{setCpass(e.target.value)}}/>
+            <div>New Password</div>
+            <input type='password' label='New Password' placeholder="Enter new Password" onChange={(e)=>{setPassword(e.target.value)}}/>
             <br/>
-            <Button
+            <div>Confirm New Password</div>
+            <input type='password' label='Confirm New Password' placeholder="Enter confirm password" onChange={(e)=>{setCpass(e.target.value)}}/>
+            <br/>
+            <button className="Button"
             onClick={()=>{
                 var st=check()
                 if(st=='')
@@ -61,7 +64,7 @@ function Forgotpassword(){
                 else
                 {window.alert(st)}
             }}
-            >Change</Button></div>
+            >Change</button></div>
        </Container>
         </div>)
 }

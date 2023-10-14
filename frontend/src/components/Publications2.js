@@ -110,7 +110,7 @@ function Publications2() {
         navigate("../")
     }
 
-        service.get("api/data?title=" + publicationFilterValue + "&branch=" + branchFilterValue + "&username=" + publishedByFilterValue + "&cjb=" + (c_j_bFilterValue==="ALL"?"":c_j_bFilterValue) + "&year=" + yearFilterValue + "&nationality=" + nationalityFilterValue + "&scl=" + scopusFilterValue + "&author_no=" + (authorsFilterValue === "ALL" ? "" : authorsFilterValue) + "&page=" + pageNo + "&limit=" + perPage + "&startDate=" + startDate + "&endDate=" + endDate).then((json) => {
+        service.get("api/publications/data?title=" + publicationFilterValue + "&branch=" + branchFilterValue + "&username=" + publishedByFilterValue + "&cjb=" + (c_j_bFilterValue==="ALL"?"":c_j_bFilterValue) + "&year=" + yearFilterValue + "&nationality=" + nationalityFilterValue + "&scl=" + scopusFilterValue + "&author_no=" + (authorsFilterValue === "ALL" ? "" : authorsFilterValue) + "&page=" + pageNo + "&limit=" + perPage + "&startDate=" + startDate + "&endDate=" + endDate).then((json) => {
             console.log("JSON", json)
             setData(json.docs);
             setPageData(json.limit == 0 ? 1 : json.pages)
