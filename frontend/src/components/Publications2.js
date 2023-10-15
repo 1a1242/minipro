@@ -32,7 +32,7 @@ function Publications2() {
     let [color, Setcolor] = useState('');
     let [background, SetBackground] = useState("#81C784");
     let [textColor, SetTextcolor] = useState("");
-    let [isAdmin, setIsAdmin] = useState(true);
+    let [isAdmin, setIsAdmin] = useState(false);
 
     /*Tells when the api need to be called*/
     let [getApi, setGetApi] = useState(0);
@@ -131,6 +131,11 @@ function Publications2() {
             console.log(error);
         });
     }, [getApi])
+    // useEffect(()=>{
+    //     let admin= localStorage.getItem('isAdmin')
+    //     setIsAdmin(admin);
+    //     console.log(localStorage.getItem('isAdmin'))
+    // },[])
 
     if(localStorage.getItem('status')=='true'){
     return (

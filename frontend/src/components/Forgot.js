@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import './Comp.css'
-import { TextInput,Button } from "@mantine/core";
+import { TextInput } from "@mantine/core";
 import { useDispatch } from "react-redux";
 import { Login } from "./Actions";
 import axios from 'axios'
+import { Button } from "@mui/material";
 function Forgot(){
     const [Email,setEmail]=useState('')
     const dispatch=useDispatch()
     return(
 
         <div>
-        <table >
+        <table style={{width:'100%',height:'100%',color:'#6C9449'}} >
             <tbody>
             <tr>
                 <td colSpan={3}><div className="Heading">
@@ -32,9 +33,21 @@ function Forgot(){
                 </td>
             </tr>
             <tr>
-                <td colSpan={3}>
+                    <td colSpan={1}>
+                    <a id="link1" className="link_pages" onClick={()=>dispatch(Login())}>Back</a>
+                    </td>
+                <td colSpan={2}>
                     <br/>
-                    <button
+                    <Button variant="contained" color='secondary' onClick={()=>{
+                        var e=Email+'@bvrithyderabad.edu.in'
+                        axios.post('http://localhost:8000/forgot',{Email:e})
+                        .then((res)=>{
+                            console.log(res.data._id)
+                            window.alert('Sent the change password link to the respective mail . Please check the mail')})
+                        .catch((e)=>{
+                            window.alert('Not Found')})
+                    }}>Verify</Button>
+                    {/* <button
                     className="Button" 
                     onClick={()=>{
                         var e=Email+'@bvrithyderabad.edu.in'
@@ -45,14 +58,11 @@ function Forgot(){
                         .catch((e)=>{
                             window.alert('Not Found')})
                     }}
-                    >Verify</button>
+                    >Verify</button> */}
                 </td>
             </tr>
             <br/>
             <tr>
-                <td colSpan={3}>
-                <a id="link1" className="link_pages" onClick={()=>dispatch(Login())}>Back</a>
-                </td>
             </tr>
             </tbody>
         </table>

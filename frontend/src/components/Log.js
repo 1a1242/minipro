@@ -68,6 +68,7 @@ function Login(){
                             localStorage.setItem('status',true)
                             localStorage.setItem('Email',res.data.Email)
                             localStorage.setItem('Name',res.data.Name)
+                            localStorage.setItem('isAdmin',res.data.admin)
                             navigate('../home')
                         })
                         .catch((e)=>{window.alert('Invalid  Credentials')})
