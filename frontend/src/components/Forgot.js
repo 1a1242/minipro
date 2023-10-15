@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import './Comp.css'
-import { TextInput } from "@mantine/core";
+import { Login } from "./Actions";
+import { Button } from "@mui/material";
+import { TextInput,Button, AppShellAside } from "@mantine/core";
 import { useDispatch } from "react-redux";
 import { Login } from "./Actions";
 import axios from 'axios'
-import { Button } from "@mui/material";
+
 function Forgot(){
     const [Email,setEmail]=useState('')
     const dispatch=useDispatch()

@@ -18,6 +18,7 @@ import Changepass from "./components/ChangePassword";
 import ChangePassword from "./components/ChangePasswordPage";
 import Forgotpassword from "./components/forgotpassword";
 import VerifiedEmail from "./components/VerifiedEmail";
+import Unverified from "./components/Unverified";
 function App() {
   return (
     <MantineProvider>
@@ -34,6 +35,7 @@ function App() {
           <Route path="/changepassword" element={<ChangePassword/>}/>
           <Route path='/forgotpassword/:id' element={<Forgotpassword />}/>
           <Route path='/verifyemail/:id' element={<VerifiedEmail/>}/>
+          <Route path="/verify" element={<Unverified/>}/>
 
           {/* <Route path="/insert" element={<WorkFlow/>}/> */}
           <Route path="/insert" element={<FirstData/>}/>

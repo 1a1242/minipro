@@ -880,9 +880,13 @@ function FirstData() {
   };
   // const navigate = useNavigate();
     useEffect(()=>{
-    var a=localStorage.getItem('status')
-    if(a==='false'){
-        navigate("../")}
+      var a=localStorage.getItem('status')
+      var b=localStorage.getItem('Verify')
+      if(a==='false'){
+          navigate("../")}
+      else if(b=='false'){
+        navigate("../verify")
+      }
     })
   return (
     <>
