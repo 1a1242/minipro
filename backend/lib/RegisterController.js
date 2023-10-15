@@ -3,7 +3,7 @@ const RegisterSchema=require('../db/RegisterSchema')
 const LoginSchema=require('../db/LoginSchema')
 module.exports.Addrequest=async function(req,res){
     try{
-        var request=await RegisterSchema.findOne(req.body)
+        var request=await RegisterSchema.findOne({Email:req.body.Email})
         if(request==null)
         {request=await RegisterSchema.create(req.body)}
         var a='http://localhost:3000/verifyemail/'+request.id 

@@ -106,8 +106,11 @@ function Publications2() {
     const login=useSelector(state=>state.Login)
     useEffect(() => {
     var a=localStorage.getItem('status')
+    var b=localStorage.getItem('Verify')
     if(a=='false'){
         navigate("../")
+    if(b=='false'){
+            navigate("../verify")}
     }
 
         service.get("api/publications/data?title=" + publicationFilterValue + "&branch=" + branchFilterValue + "&username=" + publishedByFilterValue + "&cjb=" + (c_j_bFilterValue==="ALL"?"":c_j_bFilterValue) + "&year=" + yearFilterValue + "&nationality=" + nationalityFilterValue + "&scl=" + scopusFilterValue + "&author_no=" + (authorsFilterValue === "ALL" ? "" : authorsFilterValue) + "&page=" + pageNo + "&limit=" + perPage + "&startDate=" + startDate + "&endDate=" + endDate).then((json) => {

@@ -24,8 +24,12 @@ function Home() {
     const navigate = useNavigate();
     useEffect(()=>{
     var a=localStorage.getItem('status')
+    var b=localStorage.getItem('Verify')
     if(a==='false'){
         navigate("../")}
+    else if(b=='false'){
+      navigate("../verify")
+    }
     })
   
   if(localStorage.getItem('status')==='true'){

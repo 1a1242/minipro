@@ -18,6 +18,7 @@ function Login(){
         localStorage.setItem('status',false)
         localStorage.setItem('Name','')
         localStorage.setItem('Email','')
+        localStorage.setItem('Verify',true)
         console.log(localStorage.getItem('status'))
     },[])
     return(
@@ -68,6 +69,7 @@ function Login(){
                             localStorage.setItem('status',true)
                             localStorage.setItem('Email',res.data.Email)
                             localStorage.setItem('Name',res.data.Name)
+                            localStorage.setItem('Verify',res.data.verified)
                             navigate('../home')
                         })
                         .catch((e)=>{window.alert('Invalid  Credentials')})
