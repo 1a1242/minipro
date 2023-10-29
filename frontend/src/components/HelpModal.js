@@ -29,7 +29,7 @@ import { IconEdit } from "@tabler/icons-react";
 function HelpModal({ edit }) {
   const service = new Service();
   const yearpre = new Date();
-  const depenNotifications = useNotifications();
+  // const depenNotifications = useNotifications();
   const here = new Date(
     "Sun Jan 01 2023 00:00:00 GMT+0530 (India Standard Time)"
   ).toLocaleDateString();
@@ -108,38 +108,44 @@ function HelpModal({ edit }) {
     // });
     // setTimeout(
     //   () =>{
-    showNotification({
-      title:"CLICKED",
-      message:"UPDATINGGGGGG",
-      color:"yellow",
-    })
+    // showNotification({
+    //   title:"CLICKED",
+    //   message:"UPDATINGGGGGG",
+    //   color:"yellow",
+    // })
   // }
     // ,1)
     if (!_.isEqual(body,edit)) {
       // console.log("UPDATE,", body, edit);
+      window.confirm('This will update the publication.')
       service.post('api/publications/update',body).then((res)=>{
-        notifications.show({
-          title: "Updated",
-          message: res.message,
-          color: "green",
-      });
-        console.log("RES",res)
-        // handleClose();
+      //   notifications.show({
+      //     title: "Updated",
+      //     message: res.message,
+      //     color: "green",
+      // });
+      window.alert('Updated '+edit.title+" Publication.")
+      // setShow(false)
+        // console.log("RES",res)
+        window.location.reload()
+        handleClose();
 
       }).catch((err)=>{
+        window.alert('Error While Updating '+edit.title+".\nPlease Try Again Later.")
         console.log("ERR",err)
 
       })
     } else {
-        console.log("DONT UPDATE,", body, edit);
+      window.confirm('Make changes to Update.')
+        // console.log("DONT UPDATE,", body, edit);
       // console.log("DONT UPDATE", edit.cjb,);
     }
   };
-  const handleShow = () => {setShow(true); console.log('diff',edit,body);console.log(edit.cjb, cjb, )};
+  const handleShow = () => {setShow(true);};
   // const navigate = useNavigate();
 
   const handleChangeCjb = (event) => {
-    console.log('handleChangecjb')
+    // console.log('handleChangecjb')
     setCjb(event?.target?.value);
     setBody({
       _id: edit._id,

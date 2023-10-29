@@ -264,9 +264,9 @@ function FirstData1() {
         })
     }
     const onSubmit = (event) => {
-        console.log("ONSUBMIT", body)
+        // console.log("ONSUBMIT", body)
         service.post('api/data', body).then((json) => {
-            console.log("JSON", json)
+            // console.log("JSON", json)
 
         }).catch((error) => {
             
@@ -723,7 +723,7 @@ function FirstData1() {
                 cite: e.target.value
             })
         }
-        console.log("IN HANDLE CHANGE", body)
+        // console.log("IN HANDLE CHANGE", body)
     }
     
     useEffect(()=>{

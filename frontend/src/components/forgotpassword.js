@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import "./Comp.css";
 import { Container, PasswordInput, TextInput } from "@mantine/core";
 import { sha512 } from "js-sha512";
@@ -14,8 +13,10 @@ import {
   MDBRow,
 } from "mdb-react-ui-kit";
 import { Button } from "@mui/material";
+import Service from "../Service/http";
 
 function Forgotpassword() {
+  const service = new Service();
   const navigate = useNavigate();
   const [Comp, setComp] = useState(true);
   const [email, setEmail] = useState("");
@@ -23,11 +24,11 @@ function Forgotpassword() {
   const [CPass, setCpass] = useState("");
   var id = useParams();
   useEffect(() => {
-    axios
-      .post("http://localhost:8000/forgotpassword", { id })
+    service
+      .post("forgotpassword", { id })
       .then((res) => {
-        setComp(res.data.verified);
-        setEmail(res.data.Email);
+        setComp(res.verified);
+        setEmail(res.Email);
       })
       .catch((e) => {
         setComp(true);
@@ -120,8 +121,8 @@ function Forgotpassword() {
                             var st = check();
                             if (st == "") {
                               var pas = sha512(Password);
-                              axios
-                                .post("http://localhost:8000/newpassword", {
+                              service
+                                .post("newpassword", {
                                   Email: email,
                                   Password: pas,
                                 })

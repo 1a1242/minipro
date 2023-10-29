@@ -1,16 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './Comp.css'
 import {PasswordInput } from "@mantine/core";
-import axios from "axios";
 import { sha512 } from "js-sha512";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
+import Service from "../Service/http";
 function Changepass(){
+    const service = new Service();
     const [old,setOld]=useState('')
     const[newp,setNewp]=useState('')
     const [confirm,setConfirm]=useState('')
     const validPassword = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})');
     const navigate=useNavigate()
+    // console.log("CHANGEPASS")
+    useEffect(()=>{
+        const a = localStorage.getItem('status')==='true'?true:false;
+        // console.log("useeffect",a)
+        if(!a){
+            // console.log("in IF")
+            navigate("../")
+        }
+    },[])
     function check(pass,cpass)
     {
         var s=''
@@ -70,14 +80,14 @@ function Changepass(){
                    <Button variant="contained" color='secondary' onClick={async ()=>{
                         var pass=sha512(old)
                         var email=localStorage.getItem('Email')
-                        axios.post('http://localhost:8000/userlogin',{Email:email,Password:pass})
+                        service.post('userlogin',{Email:email,Password:pass})
                         .then((res)=>{
-                            console.log(res)
+                            // console.log(res)
                            var s=check(newp,confirm)
                            if(s=='')
                            {
                                 var a=sha512(newp)
-                                axios.post('http://localhost:8000/changePassword',{Email:email,Password:a})
+                                service.post('changePassword',{Email:email,Password:a})
                                 window.alert('Password Changed Successfully')
                                 navigate('../home')
                             }

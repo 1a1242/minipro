@@ -19,6 +19,7 @@ import Service from '../Service/http';
 import HelpModal from './HelpModal';
 import DatePicker from 'react-datepicker';
 import { useSelector } from 'react-redux';
+import { BulUpload, BulkUpload } from "./BulkUpload";
 
 
 function FirstData() {
@@ -87,6 +88,7 @@ function FirstData() {
   const [is_published, setPublished] = useState("");
   const [is_affilated, setAffiliated] = useState("");
   const [author_no, setAuthorNo] = useState("");
+  const [titles, setTitles] = useState([]);
   const [send, setSend] = useState(0);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -368,21 +370,28 @@ function FirstData() {
     });
   };
   const onSubmit = (event) => {
-    console.log("ONSUBMIT-------", body);
+    // console.log("ONSUBMIT-------", body);
     // // debug();
     // setInterval(() => {
     // console.log('Logs every minute');
     //   },10000)
-
+    if(titles.includes(body.title)){
+      window.alert('Duplicate Title')
+    }
+    else{
+      window.confirm("This action will add the data into the Database")
     service
-      .post("api/publications/insert", body)
+      .post("api/publications/data", body)
       .then((json) => {
-        console.log("JSON", json);
+        // console.log("JSON", json);
+        window.alert("Succesfully Added "+body.title)
         navigate(-1);
       })
       .catch((error) => {
+        window.alert("Error while adding "+body.title+ ". \nPlease Try again later.")
         console.log(error);
       });
+    }
     // console.log("EVENT",body)
   };
   const handleChange = (e) => {
@@ -887,10 +896,19 @@ function FirstData() {
       else if(b=='false'){
         navigate("../verify")
       }
-    })
+      if(titles.length==0){
+      service.get('api/publications/titles').then((res)=>{
+        // console.log('titles',res)
+        setTitles(res);
+        // console.log("inside",titles)
+      }).catch((error)=>{
+        console.log("ERROR",error)
+      })
+    }
+    },[])
   return (
     <>
-      <Modal show={show} onHide={handleClose} size="xl">
+      {/* <Modal show={show} onHide={handleClose} size="xl">
         <Modal.Header closeButton>
           <Modal.Title>Sample Publication Data</Modal.Title>
         </Modal.Header>
@@ -910,7 +928,7 @@ function FirstData() {
             Close
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
       <HomeNavbar />
       <div
         style={{
@@ -920,9 +938,22 @@ function FirstData() {
           paddingBottom: "100px",
         }}
       >
+        {/* <br/> */}
         <MDBContainer fluid className="h-custom">
           <MDBRow className="d-flex justify-content-center align-items-center h-100">
-            <MDBCol col="12" className="m-5">
+            <MDBCol col="12" className="m-4">
+       <MDBRow end>
+                    {/* <MDBCol md="4">
+                        <ExportCSV csvData={data} fileName={"Publications"} />
+                    </MDBCol>
+                    <MDBCol md="4" >
+                        <Button  variant="contained" color='secondary' onClick={handleShow}>Advance Search</Button>
+                    </MDBCol> */}
+                    <MDBCol md="4">
+                        <BulkUpload titles={titles}/>
+                    </MDBCol>
+                </MDBRow> 
+                <br/>
               <MDBCard
                 className="card-registration card-registration-2"
                 style={{ borderRadius: "15px" }}

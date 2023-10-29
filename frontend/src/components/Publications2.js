@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 
 
 const ReactTableFixedColumns = withFixedColumns(ReactTable);
+// const ReactTableFixedColumns = ReactTable;a
 function Publications2() {
     const service = new Service();
     const navigate = useNavigate();
@@ -83,6 +84,18 @@ function Publications2() {
         var isod = new Date(e).toLocaleDateString().split('/');
         return isod[2]
     }
+    const handleDelete = (data) => {
+        // console.log('data',data);
+        window.confirm('This action will permenently delete '+data.title+' publication.')
+        service.delete('api/publications/data/'+data._id).then((res)=>{
+            // console.log("DELETD",res);
+            window.alert('Successfully Deleted '+data.title+' Publication.')
+            window.location.reload()
+        }).catch((err)=>{
+            console.log("ERROR",err)
+            window.alert('Error while deleting the publication')
+        })
+    }
     const handleClear = () => {
         setEndDate("")
         // setEndMonth("")
@@ -107,6 +120,9 @@ function Publications2() {
     useEffect(() => {
     var a=localStorage.getItem('status')
     var b=localStorage.getItem('Verify')
+    var c=localStorage.getItem('isAdmin') == 'true' ? true: false
+    // console.log('isADmin',c)
+    setIsAdmin(c);
     if(a=='false'){
         navigate("../")
     if(b=='false'){
@@ -114,7 +130,7 @@ function Publications2() {
     }
 
         service.get("api/publications/data?title=" + publicationFilterValue + "&branch=" + branchFilterValue + "&username=" + publishedByFilterValue + "&cjb=" + (c_j_bFilterValue==="ALL"?"":c_j_bFilterValue) + "&year=" + yearFilterValue + "&nationality=" + nationalityFilterValue + "&scl=" + scopusFilterValue + "&author_no=" + (authorsFilterValue === "ALL" ? "" : authorsFilterValue) + "&page=" + pageNo + "&limit=" + perPage + "&startDate=" + startDate + "&endDate=" + endDate).then((json) => {
-            console.log("JSON", json)
+            // console.log("JSON", json)
             setData(json.docs);
             setPageData(json.limit == 0 ? 1 : json.pages)
             // setEndDate("")
@@ -130,7 +146,7 @@ function Publications2() {
             // }
 
         }).catch((error) => {
-
+            window.alert('Error while fetching the publications.\n Please try again later.')
             console.log(error);
         });
     }, [getApi])
@@ -154,13 +170,13 @@ function Publications2() {
                     {Required ? <b style={{ "color": "red" }}>Both the fields are required to search*</b> : ""}
                     <Center><DatePicker
                         selected={startDate}
-                        onChange={(date) => { setStartDate(date); console.log("DATE", date) }}
+                        onChange={(date) => { setStartDate(date); }}
                         dateFormat="MM/yyyy"
                         showMonthYearPicker
                     //   required="true"
                     /> to <DatePicker
                             selected={endDate}
-                            onChange={(date) => { setEndDate(date); console.log("DATE", date) }}
+                            onChange={(date) => { setEndDate(date);  }}
                             dateFormat="MM/yyyy"
                             showMonthYearPicker
                         // required="true"
@@ -230,6 +246,7 @@ function Publications2() {
                     </tr>
                   </tbody>
                 </table> */}
+        
                 <ReactTableFixedColumns
                     // ref={tableRef}
                     sortable={false}
@@ -569,20 +586,21 @@ function Publications2() {
                             },
                             minWidth: 420
                         },
-                        (isAdmin )? {
+                         {
                             Header: <div>Edit /<br/> Delete</div>,
                             id: "admin",
                             accessor: "",
+                            show : isAdmin,
                             Cell: (row) => {
                                 //   console.log(row)
                                 return (
-                                   
-                                     <div className="button-group">
+                                    <div className="button-group">
+                                         <p>{isAdmin}</p>
                                         <HelpModal edit={row.original}/>
                                        
                                         <Tooltip arrow title="Delete" placement="top" TransitionComponent={Zoom}>
                                      {/* <ActionIcon onClick={()=>{handleShow()}} size={25} className="button-edit"> */}
-                                         <IconTrash color="white" className="button-edit" size={23}/>
+                                         <IconTrash color="white" className="button-edit" size={23} onClick={()=>{handleDelete(row.original);}}/>
                                      {/* </ActionIcon> */}
                                      </Tooltip>
                                
@@ -601,7 +619,7 @@ function Publications2() {
                             },
                             minWidth: 69,
                             fixed: 'right'
-                        }:null
+                        }
                     ]}
                     className=" -highlight text-dark h5"
                 />

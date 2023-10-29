@@ -1,3 +1,4 @@
+const { json } = require('express');
 const config = require('../config');
 const dataModal = require('../db/testData')
 
@@ -17,6 +18,54 @@ module.exports.postData =async function(req,res) {
         return res.status(500).json(error)
     }
 }
+module.exports.titles = async function(req,res){
+    try{
+        dataModal.find({}, 'title', function(err, result) {
+            if (err) throw err;
+            console.log("success")
+            const names = result.map(item => item.title);
+            return res.status(200).json(names)
+        })
+    }catch(error){
+        console.log("ERROR",error)
+        return res.status(500).json(error)
+    }
+}
+module.exports.bulkUpload = async function(req,res){
+    try{
+        const object = req.body;
+        let result1 = [];
+       for (const key in object) {
+        console.log("year",object[key].year)
+           object[key].year = new Date(object[key].year.toString());
+           console.log("year",object[key].year)
+           object[key].month = parseInt(object[key].month);
+           dataModal.create(object[key],function(err,result){
+               if(err) throw err;
+               result1.push(result);
+           })            
+       }
+        return res.status(200).json(result1)
+    }
+    catch(error){
+        console.log("ERROR",error)
+        return res.status(500).json(error)
+    }
+}
+module.exports.deleteData = async function(req,res){
+    try{
+        const id = req.params.id;
+        dataModal.findByIdAndDelete(id,function(err,result){
+            if(err) throw err;
+            console.log("success")
+            return res.status(200).json(result);
+        })
+    }
+    catch(error){
+        return res.status(500).json(error)
+    }
+}
+
 module.exports.editData = async function(req,res){
     try{
         dataModal.findOneAndReplace({_id:req.body._id},req.body,{runValidators:true}, function(err,result){

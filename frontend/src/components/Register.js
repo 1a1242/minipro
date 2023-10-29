@@ -3,12 +3,13 @@ import './Comp.css'
 import { TextInput,PasswordInput } from "@mantine/core";
 import { useDispatch } from "react-redux";
 import { Login } from "./Actions";
-import axios from 'axios'
 import { useState,useEffect } from "react";
 import {sha512} from 'js-sha512'
 import { Button } from "@mui/material";
+import Service from "../Service/http";
 function Register(){
     const dispatch=useDispatch()
+    const service = new Service();
     const [Name,setName]=useState('')
     const [Email,setEmail]=useState('')
     const [Password,setPassword]=useState('')
@@ -18,10 +19,10 @@ function Register(){
         var s=''
         if( Name.length==0)
         {s+='Invalid Name \n'}
-        if(Email.length!=10)
-        {
-            s+='Invalid Email id \n'
-        }
+        // if(Email.length!=10)
+        // {
+        //     s+='Invalid Email id \n'
+        // }
 
         if(!validPassword.test(Password))
         {
@@ -41,7 +42,7 @@ function Register(){
     function send(Name,Email,Password){
         var e=Email+'@bvrithyderabad.edu.in'
         var Pas=sha512(Password)
-        axios.post('http://localhost:8000/registerme',{Name,Email:e,Password:Pas})
+        service.post('registerme',{Name,Email:e,Password:Pas})
         .then((res)=>{
             window.alert('Successful Registration .Redirecting to login page')
             window.location.reload(false)})
@@ -118,7 +119,7 @@ function Register(){
                             var s=check()
                             if (s=='')
                             {
-                                console.log('Ok')
+                                // console.log('Ok')
                                send(Name,Email,Password)
                             }
                             else

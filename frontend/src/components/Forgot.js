@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import './Comp.css'
 import { Login } from "./Actions";
 import { Button } from "@mui/material";
-import { TextInput,Button, AppShellAside } from "@mantine/core";
+import { TextInput, AppShellAside } from "@mantine/core";
 import { useDispatch } from "react-redux";
-import { Login } from "./Actions";
-import axios from 'axios'
+import Service from "../Service/http";
 
 function Forgot(){
+    const service = new Service()
     const [Email,setEmail]=useState('')
     const dispatch=useDispatch()
     return(
@@ -42,9 +42,9 @@ function Forgot(){
                     <br/>
                     <Button variant="contained" color='secondary' onClick={()=>{
                         var e=Email+'@bvrithyderabad.edu.in'
-                        axios.post('http://localhost:8000/forgot',{Email:e})
+                        service.post('forgot',{Email:e})
                         .then((res)=>{
-                            console.log(res.data._id)
+                            // console.log(res.data._id)
                             window.alert('Sent the change password link to the respective mail . Please check the mail')})
                         .catch((e)=>{
                             window.alert('Not Found')})

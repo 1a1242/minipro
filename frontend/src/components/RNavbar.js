@@ -8,7 +8,7 @@ import { Signout } from './Actions';
 function HomeNavbar() {
     const clientId = 'client-ID';
     const logOut = () => {
-        let tokens = localStorage.getItem("token")
+        let tokens = localStorage.getItem("status")=='true'?true:false;
         if(tokens){
             localStorage.clear()
             dispatch(Signout())

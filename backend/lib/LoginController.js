@@ -15,7 +15,7 @@ module.exports.Adduser=async function(req,res,next){
 module.exports.Checkuser=async function(req,res){
     try{
         console.log(req.body)
-        const user=await LoginSchema.findOne({Email:req.body.Email})
+        const user=await LoginSchema.findOne({Email:req.body.Email}).select('-_id -__v')
         if(user==null)
         {
             res.status(404).json('User Not found')
@@ -25,6 +25,7 @@ module.exports.Checkuser=async function(req,res){
            // console.log(user)
             if (req.body.Password===user.Password){
               // console.log(user.Name)
+              user.Password = '';
                 res.status(200).json(user)
             }
             else

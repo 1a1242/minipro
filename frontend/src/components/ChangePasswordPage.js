@@ -12,15 +12,15 @@ function ChangePassword() {
     const navigate = useNavigate();
     useEffect(()=>{
     //console.log('Hello'+login.Name)
-    var a=localStorage.getItem('status')
-    var b=localStorage.getItem('Verify')
-    if(a==='false'){
+    var a=localStorage.getItem('status')==='true'?true : false;
+    var b=localStorage.getItem('Verify')==='true'?true:false;
+    if(!a){
         navigate("../")}
-    else if(b=='false'){
+    else if(!b){
       navigate("../verify")
     }
     },[])
-    if(localStorage.getItem('status')=='true'){
+    
   return (
     
     <>
@@ -69,7 +69,7 @@ function ChangePassword() {
         </div> */}
     </>
     
-  )};
+  );
 }
 
 export default ChangePassword;

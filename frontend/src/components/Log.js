@@ -5,21 +5,26 @@ import { useDispatch,useSelector } from "react-redux";
 import { Register,Forgot, Signin, Signout } from "./Actions";
 import { useState,useEffect} from "react";
 import {useNavigate} from 'react-router-dom'
-import axios from "axios";
 import { sha512 } from "js-sha512";
 import { Button } from "@mui/material";
+import Service from "../Service/http";
 function Login(){
     const [Email,setEmail]=useState('')
+    const service = new Service()
     const [Password,setPassword]=useState('')
     const dispatch=useDispatch()
     const navigate=useNavigate()
     const sign=useSelector(state=>state.Login)
     useEffect(()=>{
-        localStorage.setItem('status',false)
-        localStorage.setItem('Name','')
-        localStorage.setItem('Email','')
-        localStorage.setItem('Verify',true)
-        console.log(localStorage.getItem('status'))
+        let a =  localStorage.getItem('status')==='true' ? true:false;
+        if(a){
+            navigate('../home')
+        }
+        // localStorage.setItem('status',false)
+        // localStorage.setItem('Name','')
+        // localStorage.setItem('Email','')
+        // localStorage.setItem('Verify',)
+        // console.log(localStorage.getItem('status'))
     },[])
     return(
         <div>
@@ -62,18 +67,20 @@ function Login(){
                     <Button variant="contained" color='secondary' onClick={()=>{
                         var email=Email+'@bvrithyderabad.edu.in'
                         var pas=sha512(Password)
-                        axios.post('http://localhost:8000/userlogin',{Email:email,Password:pas})
+                        service.post('userlogin',{Email:email,Password:pas})
                         .then((res)=>{
-                            console.log('Users are',res.data.Email,res.data.Name)
-                            dispatch(Signin(res.data.Email,res.data.Name))
+                            // console.log('Users are',res.Email,res.Name)
+                            dispatch(Signin(res.Email,res.Name))
                             localStorage.setItem('status',true)
-                            localStorage.setItem('Email',res.data.Email)
-                            localStorage.setItem('Name',res.data.Name)
-                            localStorage.setItem('isAdmin',res.data.admin)
-                            localStorage.setItem('Verify',res.data.verified)
+                            localStorage.setItem('Email',res.Email)
+                            localStorage.setItem('Name',res.Name)
+                            localStorage.setItem('isAdmin',res.admin)
+                            localStorage.setItem('Verify',res.verified)
                             navigate('../home')
                         })
-                        .catch((e)=>{window.alert('Invalid  Credentials')})
+                        .catch((e)=>{
+                            console.log("error",e)
+                            window.alert('Invalid  Credentials')})
                     }}>Login</Button>
                     {/* <button
                     className='Button'

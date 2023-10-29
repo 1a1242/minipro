@@ -1,15 +1,17 @@
-import axios from "axios"
+
 import { useEffect } from "react"
 import {useNavigate} from 'react-router-dom'
+import Service from "../Service/http"
 
 function Unverified(){
     const navigate=useNavigate()
+    const service = new Service()
     useEffect(()=>{
         if(localStorage.getItem('Verify')=='true')
         {navigate('../home')}
         if(localStorage.getItem('Verify')=='false')
-        {   console.log('Not verified')    
-            axios.post('http://localhost:8000/unverified',{Email:localStorage.getItem('Email')})
+        { 
+            service.post('unverified',{Email:localStorage.getItem('Email')})
             .then((res)=>{})
             .catch((err)=>{console.log(err)})
         }
