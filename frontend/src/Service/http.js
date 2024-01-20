@@ -11,7 +11,7 @@ function joinURL(baseURL, url){
 class Service {
 
     constructor(){
-        this.domain = "http://localhost:8000";
+        this.domain = process.env.BACKEND_URL;
     }
 
     request(url,method="POST",data=null){
