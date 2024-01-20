@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
-import Modal from "react-bootstrap/Modal";
 import MenuItem from "@mui/material/MenuItem";
 import {
   MDBContainer,
@@ -11,21 +10,24 @@ import {
   MDBCardBody,
 } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router-dom";
-import HomeNavbar from "./RNavbar";
+import HomeNavbar from "../RNavbar";
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { Button } from '@mui/material';
-import Service from '../Service/http';
-import HelpModal from './HelpModal';
-import DatePicker from 'react-datepicker';
-import { useSelector } from 'react-redux';
-import { BulUpload, BulkUpload } from "./BulkUpload";
-
-
+import Service from '../../Service/http';
+import { Publication } from '../../Service/keyValueMap';
+import { useDispatch, useSelector } from 'react-redux';
+import { BulkUpload } from "./BulkUpload";
+import { Tab } from "../login/Actions";
 function FirstData() {
   // const classes = useStyles();
+  const loggedIn = useSelector((state)=>state.logged);
+  const verify = useSelector((state)=>state.verify);
+  const isSuperAdmin = useSelector((state)=>state.isSuperAdmin);
+  const isAdmin = useSelector((state)=>state.isAdmin);
   const service = new Service();
   const yearpre = new Date();
+  const dispatch=useDispatch();
   const here = new Date(
     "Sun Jan 01 2023 00:00:00 GMT+0530 (India Standard Time)"
   ).toLocaleDateString();
@@ -379,7 +381,8 @@ function FirstData() {
       window.alert('Duplicate Title')
     }
     else{
-      window.confirm("This action will add the data into the Database")
+      let confirm = window.confirm("This action will add the data into the Database")
+      if(confirm){
     service
       .post("api/publications/data", body)
       .then((json) => {
@@ -391,6 +394,9 @@ function FirstData() {
         window.alert("Error while adding "+body.title+ ". \nPlease Try again later.")
         console.log(error);
       });
+    }else{
+      window.alert("Cancelled the insert action."); 
+    }
     }
     // console.log("EVENT",body)
   };
@@ -889,12 +895,13 @@ function FirstData() {
   };
   // const navigate = useNavigate();
     useEffect(()=>{
-      var a=localStorage.getItem('status')
-      var b=localStorage.getItem('Verify')
-      if(a==='false'){
+      dispatch(Tab('new-publication'));
+      if(!loggedIn){
           navigate("../")}
-      else if(b=='false'){
+      else if(!verify){
         navigate("../verify")
+      }else if(isSuperAdmin){
+        navigate("../publications")
       }
       if(titles.length==0){
       service.get('api/publications/titles').then((res)=>{
@@ -935,14 +942,14 @@ function FirstData() {
           height: "fill",
           width: "100wh",
           backgroundColor: "#c5d299",
-          paddingBottom: "100px",
+          paddingBottom: "150px",
         }}
       >
         {/* <br/> */}
         <MDBContainer fluid className="h-custom">
           <MDBRow className="d-flex justify-content-center align-items-center h-100">
             <MDBCol col="12" className="m-4">
-       <MDBRow end>
+       {isAdmin?<MDBRow end>
                     {/* <MDBCol md="4">
                         <ExportCSV csvData={data} fileName={"Publications"} />
                     </MDBCol>
@@ -952,7 +959,7 @@ function FirstData() {
                     <MDBCol md="4">
                         <BulkUpload titles={titles}/>
                     </MDBCol>
-                </MDBRow> 
+                </MDBRow>:"" }
                 <br/>
               <MDBCard
                 className="card-registration card-registration-2"
@@ -972,7 +979,7 @@ function FirstData() {
                           required
                           id="publication"
                           name="publication"
-                          label="Publication Name"
+                          label={Publication.title}
                           fullWidth
                           variant="standard"
                           onChange={handleChange}
@@ -983,7 +990,7 @@ function FirstData() {
                           required
                           id="authors"
                           name="authors"
-                          label="Authors Name"
+                          label={Publication.username+' (Add multiple authors seperated by ",")'}
                           fullWidth
                           variant="standard"
                           onChange={handleChange}
@@ -997,14 +1004,14 @@ function FirstData() {
                               sx={{ minWidth: 120 }}
                             >
                               <InputLabel id="demo-simple-select-standard-label">
-                                C/J/B/BC
+                                {Publication.cjb+"*"}
                               </InputLabel>
                               <Select
                                 labelId="c/j/b/bc"
                                 id="c/j/b/bc"
                                 value={cjb}
                                 onChange={handleChangeCjb}
-                                label="C/J/B/BC"
+                                label={Publication.cjb}
                                 required
                               >
                                 <MenuItem value="">
@@ -1024,14 +1031,14 @@ function FirstData() {
                               sx={{ minWidth: 120 }}
                             >
                               <InputLabel id="demo-simple-select-standard-label">
-                                Branch
+                                {Publication.branch+"*"}
                               </InputLabel>
                               <Select
                                 labelId="branch"
                                 id="branch"
                                 value={branch}
                                 onChange={handleChangeBranch}
-                                label="Branch"
+                                label={Publication.branch}
                                 required
                               >
                                 <MenuItem value="">
@@ -1052,14 +1059,14 @@ function FirstData() {
                               sx={{ minWidth: 120 }}
                             >
                               <InputLabel id="demo-simple-select-standard-label">
-                                Inter/National
+                               {Publication.nationality+"*"}
                               </InputLabel>
                               <Select
                                 labelId="nationality"
                                 id="nationality"
                                 value={nationality}
                                 onChange={handleChangeNationality}
-                                label="Inter/National"
+                                label={Publication.nationality}
                                 required
                               >
                                 <MenuItem value="">
@@ -1079,7 +1086,7 @@ function FirstData() {
                           required
                           id="name_c-j-b"
                           name="name_c-j-b"
-                          label="Name of C/J/B/BC"
+                          label={Publication.name_cjb}
                           fullWidth
                           variant="standard"
                           onChange={handleChange}
@@ -1090,7 +1097,7 @@ function FirstData() {
                           required
                           id="issn"
                           name="issn"
-                          label="ISSN/ISBN/DOI"
+                          label={Publication.doi}
                           fullWidth
                           variant="standard"
                           onChange={handleChange}
@@ -1101,7 +1108,7 @@ function FirstData() {
                           required
                           id="article-cite"
                           name="article-cite"
-                          label="Cite Article"
+                          label={Publication.cite}
                           fullWidth
                           variant="standard"
                           onChange={handleChange}
@@ -1113,7 +1120,7 @@ function FirstData() {
                           //required
                           id="organizer"
                           name="organizer"
-                          label="Organizer"
+                          label={Publication.organised_by}
                           fullWidth
                           variant="standard"
                           color="secondary"
@@ -1125,7 +1132,7 @@ function FirstData() {
                           required
                           id="link"
                           name="link"
-                          label="Link"
+                          label={Publication.link}
                           fullWidth
                           variant="standard"
                           color="secondary"
@@ -1139,7 +1146,7 @@ function FirstData() {
                               //required
                               id="vol"
                               name="vol"
-                              label="Volume"
+                              label={Publication.vol}
                               fullWidth
                               variant="standard"
                               color="secondary"
@@ -1153,7 +1160,7 @@ function FirstData() {
                               //required
                               id="issue"
                               name="issue"
-                              label="Issue"
+                              label={Publication.issue}
                               fullWidth
                               variant="standard"
                               color="secondary"
@@ -1175,14 +1182,14 @@ function FirstData() {
                               sx={{ minWidth: 120 }}
                             >
                               <InputLabel id="demo-simple-select-standard-label">
-                                Year
+                                {Publication.year+"*"}
                               </InputLabel>
                               <Select
                                 labelId="year"
                                 id="year"
                                 value={yearvalue}
                                 onChange={handleChangeYear}
-                                label="year"
+                                label={Publication.year}
                                 required
                               >
                                 {years.map((item) => (
@@ -1217,7 +1224,7 @@ function FirstData() {
                               sx={{ minWidth: 120 }}
                             >
                               <InputLabel id="demo-simple-select-standard-label">
-                                Month
+                                {Publication.month+"*"}
                               </InputLabel>
                               <Select
                                 labelId="month"
@@ -1265,7 +1272,7 @@ function FirstData() {
                                 id="demo-simple-select-standard-label"
                                 color="secondary"
                               >
-                                In Proceedings?
+                                {Publication.is_proceeding}
                               </InputLabel>
                               <Select
                                 labelId="proceedings"
@@ -1295,7 +1302,7 @@ function FirstData() {
                                 id="demo-simple-select-standard-label"
                                 color="secondary"
                               >
-                                Abstract Published?
+                                {Publication.is_published}
                               </InputLabel>
                               <Select
                                 labelId="published"
@@ -1320,7 +1327,7 @@ function FirstData() {
                               sx={{ minWidth: 120 }}
                             >
                               <InputLabel color="secondary">
-                                Affiliated?
+                                {Publication.is_affilated}
                               </InputLabel>
                               <Select
                                 labelId="affiliated"
@@ -1352,7 +1359,7 @@ function FirstData() {
                                 id="demo-simple-select-standard-label"
                                 color="secondary"
                               >
-                                Author Order
+                                {Publication.author_no}
                               </InputLabel>
                               <Select
                                 labelId="author_no"
@@ -1411,7 +1418,7 @@ function FirstData() {
                               required
                               id="scopus"
                               name="scopus"
-                              label="SCI/Scopus/WoS/Others"
+                              label={Publication.scl}
                               fullWidth
                               variant="standard"
                               color="secondary"
@@ -1424,7 +1431,7 @@ function FirstData() {
                               // required
                               id="citationscopus"
                               name="citationscopus"
-                              label="Citation in Scopus/WoS"
+                              label={Publication.citation_scopus}
                               fullWidth
                               variant="standard"
                               color="secondary"
@@ -1436,7 +1443,7 @@ function FirstData() {
                               // required
                               id="citationgoogle"
                               name="citationgoogle"
-                              label="Citation in GoogleScholar"
+                              label={Publication.citation_google}
                               fullWidth
                               variant="standard"
                               color="secondary"

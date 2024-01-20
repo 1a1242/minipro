@@ -1,5 +1,5 @@
 import React from "react";
-import './Comp.css'
+import '../Comp.css'
 import { TextInput,PasswordInput } from "@mantine/core";
 import { useDispatch,useSelector } from "react-redux";
 import { Register,Forgot, Signin, Signout } from "./Actions";
@@ -7,17 +7,18 @@ import { useState,useEffect} from "react";
 import {useNavigate} from 'react-router-dom'
 import { sha512 } from "js-sha512";
 import { Button } from "@mui/material";
-import Service from "../Service/http";
+import Service from "../../Service/http";
 function Login(){
     const [Email,setEmail]=useState('')
     const service = new Service()
     const [Password,setPassword]=useState('')
     const dispatch=useDispatch()
     const navigate=useNavigate()
-    const sign=useSelector(state=>state.Login)
+    // const sign=useSelector(state=>state.Login)
+    const loggedIn = useSelector((state)=>state.logged);
     useEffect(()=>{
-        let a =  localStorage.getItem('status')==='true' ? true:false;
-        if(a){
+        
+        if(loggedIn){
             navigate('../home')
         }
         // localStorage.setItem('status',false)
@@ -38,7 +39,7 @@ function Login(){
             <br/>
             <tr>
                 <td >
-                    <label id='label'>Username</label>
+                    <label id='label'>Email</label>
                 </td>
             </tr>
             <tr>
@@ -69,13 +70,13 @@ function Login(){
                         var pas=sha512(Password)
                         service.post('userlogin',{Email:email,Password:pas})
                         .then((res)=>{
-                            // console.log('Users are',res.Email,res.Name)
-                            dispatch(Signin(res.Email,res.Name))
-                            localStorage.setItem('status',true)
-                            localStorage.setItem('Email',res.Email)
-                            localStorage.setItem('Name',res.Name)
-                            localStorage.setItem('isAdmin',res.admin)
-                            localStorage.setItem('Verify',res.verified)
+                            console.log('Users are',res.Email,res.Name,res)
+                            dispatch(Signin(res.Email,res.Name,res.role=="admin"?true:false,res.role=="super-admin"?true:false,res.verified))
+                            // localStorage.setItem('status',true)
+                            // // localStorage.setItem('Email',res.Email)
+                            // localStorage.setItem('Name',res.Name)
+                            // localStorage.setItem('Role',res.role)
+                            // localStorage.setItem('Verify',res.verified)
                             navigate('../home')
                         })
                         .catch((e)=>{

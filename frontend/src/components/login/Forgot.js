@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import './Comp.css'
+import '../Comp.css'
 import { Login } from "./Actions";
 import { Button } from "@mui/material";
 import { TextInput, AppShellAside } from "@mantine/core";
 import { useDispatch } from "react-redux";
-import Service from "../Service/http";
+import Service from "../../Service/http";
+import { useNavigate } from "react-router-dom";
 
 function Forgot(){
     const service = new Service()
     const [Email,setEmail]=useState('')
     const dispatch=useDispatch()
+    const navigate=useNavigate()
     return(
 
-        <div>
+        // <div>
         <table style={{width:'100%',height:'100%',color:'#6C9449'}} >
             <tbody>
             <tr>
@@ -26,7 +28,7 @@ function Forgot(){
                     Registered Email Id
                 </td>
             </tr>
-            <tr>
+            <tr>    
                 <td>
                     <input onChange={(e)=>{setEmail(e.target.value)}}/>
                 </td>
@@ -48,7 +50,7 @@ function Forgot(){
                             window.alert('Sent the change password link to the respective mail . Please check the mail')})
                         .catch((e)=>{
                             window.alert('Not Found')})
-                    }}>Verify</Button>
+                    }}>Send Code</Button>
                     {/* <button
                     className="Button" 
                     onClick={()=>{
@@ -68,7 +70,7 @@ function Forgot(){
             </tr>
             </tbody>
         </table>
-        </div>
+        // </diSv>
 
 
         // <div className="Box">

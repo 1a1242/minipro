@@ -1,22 +1,20 @@
 import React, { useEffect } from 'react';
-import HomeNavbar from "./RNavbar";
+import HomeNavbar from "../RNavbar";
 import {useSelector} from 'react-redux'
 import { useNavigate } from 'react-router-dom';
-import image from './static/hompage.jpg'
-import logo from './static/bvrit-logo.jpg'
 import Changepass from './ChangePassword';
 import { MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCol, MDBRow } from 'mdb-react-ui-kit';
 
 function ChangePassword() {
   const login=useSelector(state=>state.Login)
+  const loggedIn = useSelector((state)=>state.logged);
+  const verify = useSelector((state)=>state.verify);
     const navigate = useNavigate();
     useEffect(()=>{
     //console.log('Hello'+login.Name)
-    var a=localStorage.getItem('status')==='true'?true : false;
-    var b=localStorage.getItem('Verify')==='true'?true:false;
-    if(!a){
+    if(!loggedIn){
         navigate("../")}
-    else if(!b){
+    else if(!verify){
       navigate("../verify")
     }
     },[])
@@ -33,7 +31,7 @@ function ChangePassword() {
         <MDBRow className='g-0'>
 
           <MDBCol md='8'>
-          <MDBCardImage src={require('./static/hompage.jpg')} fluid />
+          <MDBCardImage src={require('../static/hompage.jpg')} fluid />
           </MDBCol>
 
           <MDBCol md='4' >

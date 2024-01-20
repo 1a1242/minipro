@@ -6,37 +6,22 @@ import React, { useState } from "react";
 // import * as XLSX from 'xlsx';
 import Modal from "react-bootstrap/Modal";
 import { CSVLink } from "react-csv";
+import { PatentsKey } from "../../Service/keyValueMap";
 const initialValues = [
-  { label: "Publication", checked: false, key: "title" },
-  { label: "Branch", checked: false, key: "branch" },
-  { label: "Authors", checked: false, key: "username" },
-  { label: "C/J/B/BC", checked: false, key: "cjb" },
-  { label: "Name of C/J/B/BC", checked: false, key: "name_cjb" },
-  { label: "Volume", checked: false, key: "vol" },
-  { label: "Issue", checked: false, key: "issue" },
-  { label: "Year", checked: false, key: "year" },
-  { label: "Month", checked: false, key: "month" },
-  { label: "ISSN/ISBN/DOI", checked: false, key: "doi" },
-  { label: "Inter/National", checked: false, key: "nationality" },
-  { label: "Organisor", checked: false, key: "organised_by" },
-  { label: "In Proceedings", checked: false, key: "is_proceeding" },
-  { label: "Abstract Published", checked: false, key: "is_published" },
-  { label: "Scopus/Wos/SCI/Others", checked: false, key: "scl" },
-  { label: "Citation in Scopus/WoS", checked: false, key: "citation_scopus" },
-  {
-    label: "Citation in GoogleScholar",
-    checked: false,
-    key: "citation_google",
-  },
-  { label: "Link", checked: false, key: "link" },
-  { label: "Affiliated?", checked: false, key: "is_affilated" },
-  { label: "Are you author?", checked: false, key: "author_no" },
-  { label: "Starting Page", checked: false, key: "starting_page" },
-  { label: "Ending Page", checked: false, key: "ending_page" },
-  { label: "Cite Article", checked: false, key: "cite" },
+  { label: PatentsKey.title+"*", checked: true, key: "title" },
+  { label: PatentsKey.authors+"*", checked: true, key: "authors" },
+  { label: PatentsKey.pat_no+"*", checked: true, key: "pat_no" },
+  { label: PatentsKey.dept+"*", checked: true, key: "dept" },
+  { label: PatentsKey.design_utility+"*", checked: true, key: "design_utility" },
+  { label: PatentsKey.filed+"*", checked: true, key: "filed" },
+//   { label: Publication.issue, checked: false, key: "issue" },
+  { label: PatentsKey.year, checked: true, key: "year" },
+  { label: PatentsKey.published, checked: true, key: "published" },
+  { label: PatentsKey.abstract, checked: true, key: "abstract" },
+  { label: PatentsKey.country+"*", checked: true, key: "country" },
 ];
 
-export const ExportCSV = ({ csvData, fileName }) => {
+export const PatentExportCSV = ({ csvData, fileName }) => {
   const [values, handlers] = useListState(initialValues);
 
   const allChecked = values.every((value) => value.checked);

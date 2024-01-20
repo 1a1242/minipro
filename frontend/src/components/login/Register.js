@@ -1,16 +1,17 @@
 import React from "react";
-import './Comp.css'
+import '../Comp.css'
 import { TextInput,PasswordInput } from "@mantine/core";
 import { useDispatch } from "react-redux";
 import { Login } from "./Actions";
 import { useState,useEffect } from "react";
 import {sha512} from 'js-sha512'
 import { Button } from "@mui/material";
-import Service from "../Service/http";
+import Service from "../../Service/http";
 function Register(){
     const dispatch=useDispatch()
     const service = new Service();
     const [Name,setName]=useState('')
+    const [Branch,setBranch] =useState('')
     const [Email,setEmail]=useState('')
     const [Password,setPassword]=useState('')
     const [CPass,setCpass]=useState('')
@@ -30,7 +31,10 @@ function Register(){
         }
         if(Password!=CPass)
         {
-            s+='Password and Confirm passwords do not match'
+            s+='Password and Confirm passwords do not match \n'
+        }
+        if(Branch==""){
+            s+='Branch cannot be empty.'
         }
         return s
     }
@@ -42,17 +46,17 @@ function Register(){
     function send(Name,Email,Password){
         var e=Email+'@bvrithyderabad.edu.in'
         var Pas=sha512(Password)
-        service.post('registerme',{Name,Email:e,Password:Pas})
+        service.post('registerme',{Name,Email:e,Password:Pas,branch:Branch})
         .then((res)=>{
             window.alert('Successful Registration .Redirecting to login page')
             window.location.reload(false)})
         .catch((e)=>{
-            window.alert('User Already Exists!!!')
+            window.alert('ERROR while Registering the user.')
             console.log(e)})
     }
 
     return(
-        <div>
+
         <table style={{width:'100%',height:'100%',color:'#6C9449', padding:'20px'}}>
         <tbody>
             <tr>
@@ -64,15 +68,30 @@ function Register(){
                 <td >
                     <label id='label'>Name</label>
                 </td>
+                <td >
+                    <label id='label'>Branch</label>
+                </td>
             </tr>
             <tr>
-                 <td colSpan={3}>
+                 <td >
                     <input className='Left_full' width={100} onChange={(e)=>{setName(e.target.value)}}/>
+                </td>
+                <td colSpan={1.5}>
+                    {/* <input className='Left_full' width={100} onChange={(e)=>{setBranch(e.target.value)}}/> */}
+                    <select name="branch" id="branch" style={{width:"100%", height:"100%"}}onChange={(e)=>{setBranch(e.target.value)}}>
+                    <option value="">None</option>
+  <option value="IT">IT</option>
+  <option value="CSE">CSE</option>
+  <option value="ECE">ECE</option>
+  <option value="EEE">EEE</option>
+  <option value="AI/ML">AI/ML</option>
+  <option value="BS&H">BS&H</option>
+</select>
                 </td>
                 </tr>
             <tr>
                 <td >
-                    <label id='label'>Username</label>
+                    <label id='label'>Email</label>
                 </td>
             </tr>
             <tr>
@@ -120,7 +139,7 @@ function Register(){
                             if (s=='')
                             {
                                 // console.log('Ok')
-                               send(Name,Email,Password)
+                               send(Name,Email,Password,Branch)
                             }
                             else
                             {
@@ -152,7 +171,7 @@ function Register(){
             
             </tbody>
         </table>
-        </div>
+
 
 
         // <div className="Box">

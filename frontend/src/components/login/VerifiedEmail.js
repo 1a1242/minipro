@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react"
 import { useParams } from "react-router-dom"
-import Service from "../Service/http"
+import Service from "../../Service/http"
 function VerifiedEmail(){
     const service = new Service()
     const id=useParams()

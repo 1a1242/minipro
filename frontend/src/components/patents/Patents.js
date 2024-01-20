@@ -5,36 +5,44 @@ import withFixedColumns from "react-table-hoc-fixed-columns";
 import "react-table-hoc-fixed-columns/lib/styles.css";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import Service from "../Service/http";
-import HomeNavbar from "./RNavbar";
+import Service from "../../Service/http";
+import HomeNavbar from "../RNavbar";
 import { useNavigate } from "react-router-dom";
 import { CSVLink } from "react-csv";
 import { useDownloadExcel } from 'react-export-table-to-excel';
 import { Button, Tooltip, Zoom } from "@mui/material";
-import { ExportCSV } from "./ExportCSV";
-import { MDBCol, MDBRow } from "mdb-react-ui-kit";
+import { ExportCSV } from "../publications/ExportCSV";
+import { MDBCol, MDBContainer, MDBRow } from "mdb-react-ui-kit";
 import DatePicker from 'react-datepicker';
 import { IconEdit, IconTrash } from '@tabler/icons-react'
 import { Portal } from "react-overlays";
-import Modal from 'react-bootstrap/Modal';
-import HelpModal from "./HelpModal";
-import { Center } from "@mantine/core";
-import { useSelector } from "react-redux";
-
+// import Modal from 'react-bootstrap/Modal';
+import HelpModal from "../publications/HelpModal";
+import { Center, Group, Modal, MultiSelect } from "@mantine/core";
+import { useDispatch, useSelector } from "react-redux";
+import { PatentsKey, Publication } from "../../Service/keyValueMap";
+import EditPatent from "./EditPatent";
+import { PatentExportCSV } from "./PatentExportCSV";
+import { DateInput } from "@mantine/dates";
+import { Tab } from "../login/Actions";
+// import { titles } from "../../../backend/lib/fetchUtils";
 
 const ReactTableFixedColumns = withFixedColumns(ReactTable);
 // const ReactTableFixedColumns = ReactTable;a
-function Publications2() {
+function Patents() {
     const service = new Service();
     const navigate = useNavigate();
-
+    const verify = useSelector((state)=>state.verify);
+    const loggedIn = useSelector((state)=>state.logged);
+    const dispatch=useDispatch()
     let [data, setData] = useState([]); /*Table data*/
     let [pageData, setPageData] = useState([]); /*Meta Data about pages*/
     let [color, Setcolor] = useState('');
     let [background, SetBackground] = useState("#81C784");
     let [textColor, SetTextcolor] = useState("");
-    let [isAdmin, setIsAdmin] = useState(false);
-
+    let isAdmin = useSelector((state)=>state.isAdmin);
+    let isSuperAdmin = useSelector((state)=>state.isSuperAdmin);
+    let [titles, setTitles ] = useState([]);
     /*Tells when the api need to be called*/
     let [getApi, setGetApi] = useState(0);
 
@@ -47,7 +55,7 @@ function Publications2() {
     let [yearFilterValue, setYearFilterValue] = useState("");
 
     let [nationalityFilterValue, setNationalityFilterValue] = useState("");
-    let [authorsFilterValue, setAuthorsFilterValue] = useState("")
+    let [advance, setAdvance] = useState("filed");
 
     let [scopusFilterValue, setScopusFilterValue] = useState("");
     let [startDate, setStartDate] = useState("")
@@ -55,7 +63,7 @@ function Publications2() {
 
     const [show, setShow] = useState(false)
     const [showEdit, setShowEdit] = useState(false)
-    let [jobs, setJobs] = useState(["ALL","C","J","B","BC"])
+    let [jobs, setJobs] = useState(["ALL","Design","Utility"])
     let [authors, setAuthors] = useState(["ALL", "Single", "First", "Second", "Third", "Fourth", "Fifth", "Others"])
     // let [verdicts, setVerdict] = useState(['All',"ACCEPTED", "WRONG ANSWER","TIME LIMIT EXCEEDED","RUNTIME ERROR","PENDING","OTHER","COMPILATION ERROR"]);
     // let [languages, setLanguage] = useState(['All',"CPP", "C#", "JAVA", "JAVASCRIPT", "PYTHON"]);
@@ -86,50 +94,58 @@ function Publications2() {
     }
     const handleDelete = (data) => {
         // console.log('data',data);
-        window.confirm('This action will permenently delete '+data.title+' publication.')
-        service.delete('api/publications/data/'+data._id).then((res)=>{
+        let confirm =window.confirm('This action will permenently delete '+data.title+' patent.')
+        if(confirm){
+            service.delete('api/patents/data/'+data._id).then((res)=>{
             // console.log("DELETD",res);
-            window.alert('Successfully Deleted '+data.title+' Publication.')
+            window.alert('Successfully Deleted '+data.title+' Patent.')
             window.location.reload()
         }).catch((err)=>{
             console.log("ERROR",err)
-            window.alert('Error while deleting the publication')
+            window.alert('Error while deleting the patent')
         })
+    }else{
+        window.alert("Cancelled the delete action."); 
+      }
     }
     const handleClear = () => {
-        setEndDate("")
-        // setEndMonth("")
-        // setEndYear("")
-        setStartDate("")
-        // setStartMonth("")
-        // setStartYear("")
-        setRequired(false)
-        setAuthorsFilterValue("ALL")
-        setBranchFilterValue("")
-        setNationalityFilterValue("")
-        setPublicationFilterValue("")
-        setPublishedByFilterValue("")
-        setScopusFilterValue("")
-        setYearFilterValue("")
-        setc_j_bFilterValue("ALL")
-        setGetApi(0)
-        setPerPage(10)
-        setPageNo(1)
+        // setEndDate("")
+        // // setEndMonth("")
+        // // setEndYear("")
+        // setStartDate("")
+        // // setStartMonth("")
+        // // setStartYear("")
+        // setRequired(false)
+        // setAuthorsFilterValue("ALL")
+        // setBranchFilterValue("")
+        // setNationalityFilterValue("")
+        // setPublicationFilterValue("")
+        // setPublishedByFilterValue("")
+        // setScopusFilterValue("")
+        // setYearFilterValue("")
+        // setc_j_bFilterValue("ALL")
+        // setGetApi(0)
+        // setPerPage(10)
+        // setPageNo(1)
+        window.location.reload()
     }
-    const login=useSelector(state=>state.Login)
     useEffect(() => {
-    var a=localStorage.getItem('status')
-    var b=localStorage.getItem('Verify')
-    var c=localStorage.getItem('isAdmin') == 'true' ? true: false
-    // console.log('isADmin',c)
-    setIsAdmin(c);
-    if(a=='false'){
+        dispatch(Tab('patent'));
+    if(!loggedIn){
         navigate("../")
-    if(b=='false'){
+    if(!verify){
             navigate("../verify")}
     }
+    if(titles.length==0){
+        service.get('api/patents/number').then((res)=>{
+          // console.log('titles',res)
+          setTitles(res);
+          // console.log("inside",titles)
+        }).catch((error)=>{
+          console.log("ERROR",error)
+        })}
 
-        service.get("api/publications/data?title=" + publicationFilterValue + "&branch=" + branchFilterValue + "&username=" + publishedByFilterValue + "&cjb=" + (c_j_bFilterValue==="ALL"?"":c_j_bFilterValue) + "&year=" + yearFilterValue + "&nationality=" + nationalityFilterValue + "&scl=" + scopusFilterValue + "&author_no=" + (authorsFilterValue === "ALL" ? "" : authorsFilterValue) + "&page=" + pageNo + "&limit=" + perPage + "&startDate=" + startDate + "&endDate=" + endDate).then((json) => {
+        service.get("api/patents/data?title=" + publicationFilterValue + "&branch=" + branchFilterValue + "&authors=" + publishedByFilterValue + "&design=" + (c_j_bFilterValue==="ALL"?"":c_j_bFilterValue) + "&pat_no=" + yearFilterValue + "&country=" + nationalityFilterValue + "&page=" + pageNo + "&limit=" + perPage + "&startDate=" + startDate + "&endDate=" + endDate +"&advance="+advance).then((json) => {
             // console.log("JSON", json)
             setData(json.docs);
             setPageData(json.limit == 0 ? 1 : json.pages)
@@ -156,50 +172,73 @@ function Publications2() {
     //     console.log(localStorage.getItem('isAdmin'))
     // },[])
 
-    if(localStorage.getItem('status')=='true'){
+    if(loggedIn){
     return (
 
         <>
-           <Modal show={show} onHide={handleClose} size="md">
-                <Modal.Header closeButton>
-                    <Modal.Title>Range Date Search</Modal.Title>
+           <Modal.Root opened={show} onClose={handleClose} size="md">
+            <Modal.Content>
+                <Modal.Header>
+                    <Modal.Title><h4>Range Date Search
+                        </h4></Modal.Title>
+                        <Modal.CloseButton/>
                 </Modal.Header>
                 <Modal.Body className="bg-green">
                     {/* <HelpModal/> */}
+                    <MDBContainer fluid>
                     {/* <form id="date-entry" ref={formRef} onSubmit={handleSearch}> */}
                     {Required ? <b style={{ "color": "red" }}>Both the fields are required to search*</b> : ""}
-                    <Center><DatePicker
-                        selected={startDate}
-                        onChange={(date) => { setStartDate(date); }}
-                        dateFormat="MM/yyyy"
-                        showMonthYearPicker
-                    //   required="true"
-                    /> to <DatePicker
-                            selected={endDate}
-                            onChange={(date) => { setEndDate(date);  }}
-                            dateFormat="MM/yyyy"
-                            showMonthYearPicker
-                        // required="true"
-                        // onChangeRaw={(event) => console.log(event.target.value)}
-                        />
+                    {/* <Center> */}
+                    <MDBRow>
+                            <MDBCol md="6">
+                                <DateInput variant="filled" styles={{"label": {"color": "white","text-align":"left"}}}
+                          style={{"text-align":"left"}} minDate={new Date("01-01-2012")}
+      maxDate={new Date()} withAsterisk required label={"From Date"} valueFormat="DD MMM YYYY" placeholder="Select Date" onChange={(date) => { setStartDate(date); }}      />
+                            </MDBCol>
+                            <MDBCol md="6">
+                                <DateInput variant="filled" styles={{"label": {"color": "white","text-align":"left"}}}
+                          style={{"text-align":"left"}} minDate={new Date("01-01-2012")}
+      maxDate={new Date()} withAsterisk valueFormat="DD MMM YYYY" label={"To Date"} placeholder="Select Date" onChange={(date) => { setEndDate(date);  }}/>
+                            </MDBCol>
+                        </MDBRow>
                         <br />
-                        <br /><br />
+                        <MultiSelect 
+                            //    ref={multiSelectRef}
+                              styles={{"label": {"color": "white","text-align":"left"}}}
+                              style={{"text-align":"left"}} 
+                              withAsterisk 
+                              placeholder="Select One" 
+                              label={PatentsKey.dept} 
+                              searchable 
+                              id = "dept"
+                              maxValues={1}
+                              defaultValue={["filed"]}
+                              data={[ { value: 'filed', label: PatentsKey.filed },  { value: 'published', label: PatentsKey.published },  { value: 'grant', label: PatentsKey.year }]} 
+                            //   value={cjb} 
+                              onChange={(e)=>{setAdvance(e)}} />
+                              <br/>
+                              <Group justify="center">
                         <Button variant="contained" color="primary" onClick={() => { (startDate !== "" && endDate !== "") ? handleSearch() : setRequired(true) }}>
                             Search
                         </Button>
-                    </Center>
+                        </Group>
+                    {/* </Center> */}
+                        </MDBContainer>
                     {/* </form> */}
                 </Modal.Body>
+
+
+            </Modal.Content>
                 {/* <Modal.Footer><
           <Button variant="contained" color="primary" onClick={handleClose}>
             Search
           </Button>
         </Modal.Footer> */}
-            </Modal>
+            </Modal.Root>
             
             <HomeNavbar />
             <div className="p-3" style={{
-                height: 0<data.length && data.length<10?"90vh":"100%",
+                height: 0<data.length && data.length<10?"93vh":"100%",
                 width: "99vw",
                 "backgroundColor": "#c5d299"
             }}>
@@ -216,7 +255,7 @@ function Publications2() {
                 <br />
                 <MDBRow>
                     <MDBCol md="4">
-                        <ExportCSV csvData={data} fileName={"Publications"} />
+                        <PatentExportCSV csvData={data} fileName={"Patents"} />
                     </MDBCol>
                     <MDBCol md="4" >
                         <Button  variant="contained" color='secondary' onClick={handleShow}>Advance Search</Button>
@@ -275,7 +314,7 @@ function Publications2() {
                             fixed: 'left'
                         },
                         {
-                            Header: () => (<div>Publication<br /><input type="text" id="publication" name="publication" onKeyPress={(e) => { if (e.key === "Enter") { setGetApi(getApi + 1); setPageNo(1) } }} onChange={(e) => { setPublicationFilterValue(e.target.value); }} /></div>),
+                            Header: () => (<div>{PatentsKey.title}<br /><input type="text" id="publication" name="publication" onKeyPress={(e) => { if (e.key === "Enter") { setGetApi(getApi + 1); setPageNo(1) } }} onChange={(e) => { setPublicationFilterValue(e.target.value); }} /></div>),
                             accessor: "title",
                             disableSortBy: true,
                             // Cell: e =>{e.original.title},
@@ -291,9 +330,9 @@ function Publications2() {
                             fixed: 'left'
                         },
                         {
-                            Header: () => (<div>Branch<br /><input size="sm" type="text" id="branch" name="branch" onKeyPress={(e) => { if (e.key === "Enter") { setGetApi(getApi + 1); setPageNo(1) } }} onChange={(e) => { setBranchFilterValue(e.target.value); }} /></div>),
-                            accessor: "branch",
-                            //Cell: e =>{e.original.title},
+                            Header: () => (<div>{PatentsKey.pat_no}<br /><input type="text" id="year" name="year" onKeyPress={(e) => { if (e.key === "Enter") { setGetApi(getApi + 1); setPageNo(1) } }} onChange={(e) => { setYearFilterValue(e.target.value); }} /></div>),
+                            accessor: "pat_no",
+                            // Cell: e => <a>{(e.original.year)}</a>,\\
                             getProps: (state, rowInfo, column) => {
                                 return {
                                     style: {
@@ -302,11 +341,11 @@ function Publications2() {
                                     },
                                 };
                             },
-                            minWidth: 100
+                            //minWidth: 420
                         },
                         {
-                            Header: () => (<div>Authors<br /><input type="text" id="published_by" name="published_by" onKeyPress={(e) => { if (e.key === "Enter") { setGetApi(getApi + 1); setPageNo(1) } }} onChange={(e) => { setPublishedByFilterValue(e.target.value); }} /></div>),
-                            accessor: "username",
+                            Header: () => (<div>{PatentsKey.authors}<br /><input type="text" id="published_by" name="published_by" onKeyPress={(e) => { if (e.key === "Enter") { setGetApi(getApi + 1); setPageNo(1) } }} onChange={(e) => { setPublishedByFilterValue(e.target.value); }} /></div>),
+                            accessor: "authors",
                             //Cell: e =>{e.original.username},
                             getProps: (state, rowInfo, column) => {
                                 return {
@@ -319,9 +358,12 @@ function Publications2() {
                             minWidth: 210
                         },
                         {
-                            Header: () => (<div>C/J/B/BC<br /><select id="c_j_b" onChange={(e) => { setc_j_bFilterValue(e.target.value); setGetApi(getApi + 1); setPageNo(1) }} >{jobs.map(verdict => { return (<option value={verdict}> {verdict} </option>) })}</select></div>),
-                            accessor: "cjb",
-                            //Cell: e => {e.original.cjb},
+                            Header: () => (<div>{PatentsKey.dept}<br /><input size="sm" type="text" id="branch" name="branch" onKeyPress={(e) => { if (e.key === "Enter") { setGetApi(getApi + 1); setPageNo(1) } }} onChange={(e) => { setBranchFilterValue(e.target.value); }} /></div>),
+                            accessor: "dept",
+                            Cell: (row) =>{
+                                let l = row.original.dept.join(", ");
+                                return (<div>{l}</div>)
+                            },
                             getProps: (state, rowInfo, column) => {
                                 return {
                                     style: {
@@ -330,12 +372,12 @@ function Publications2() {
                                     },
                                 };
                             },
-                            //minWidth: 140
+                            minWidth: 100
                         },
                         {
-                            Header: "Name of C/J/B/BC",
-                            accessor: "name_cjb",
-                            //Cell: e => {e.original.name_cjb},
+                            Header: () => (<div>{PatentsKey.design_utility}<br /><select id="c_j_b" onChange={(e) => { setc_j_bFilterValue(e.target.value); setGetApi(getApi + 1); setPageNo(1) }} >{jobs.map(verdict => { return (<option value={verdict}> {verdict} </option>) })}</select></div>),
+                            accessor: "design_utility",
+                            //Cell: e => {e.original.cjb},
                             getProps: (state, rowInfo, column) => {
                                 return {
                                     style: {
@@ -344,12 +386,22 @@ function Publications2() {
                                     },
                                 };
                             },
-                            minWidth: 210
+                            //minWidth: 140
                         },
                         {
-                            Header: "Volume",
-                            accessor: "vol",
-                            //Cell: e =>{e.original.vol},
+                            Header: PatentsKey.filed,
+                            accessor: "filed",
+                            Cell: (row) => {
+                                //   console.log(row)
+
+                                let formattedDate = row.original.filed;
+                                if(row.original.filed!=null){
+                                let dateObject = new Date(row.original.filed);
+                                formattedDate = dateObject.toLocaleDateString("en-GB")
+                                }
+                                
+                                return <div>{formattedDate}</div>;
+                            },
                             getProps: (state, rowInfo, column) => {
                                 return {
                                     style: {
@@ -358,12 +410,22 @@ function Publications2() {
                                     },
                                 };
                             },
-                            //minWidth: 210
+                            minWidth: 210
                         },
                         {
-                            Header: "Issue",
-                            accessor: "issue",
-                            //Cell: e =>{e.original.issue},
+                            Header: PatentsKey.published,
+                            accessor: "published",
+                            Cell: (row) => {
+                                //   console.log(row)
+
+                                let formattedDate = row.original.published;
+                                if(row.original.published!=null){
+                                let dateObject = new Date(row.original.published);
+                                formattedDate = dateObject.toLocaleDateString("en-GB")
+                                }
+                                
+                                return <div>{formattedDate}</div>;
+                            },
                             getProps: (state, rowInfo, column) => {
                                 return {
                                     style: {
@@ -372,12 +434,22 @@ function Publications2() {
                                     },
                                 };
                             },
-                            //minWidth: 140
+                            //minWidth: 210
                         },
                         {
-                            Header: () => (<div>Year<br /><input type="text" id="year" name="year" onKeyPress={(e) => { if (e.key === "Enter") { setGetApi(getApi + 1); setPageNo(1) } }} onChange={(e) => { setYearFilterValue(e.target.value); }} /></div>),
+                            Header: PatentsKey.year,
                             accessor: "year",
-                            Cell: e => <a>{fun(e.original.year)}</a>,
+                            Cell: (row) => {
+                                //   console.log(row)
+
+                                let formattedDate = row.original.year;
+                                if(row.original.year!=null){
+                                let dateObject = new Date(row.original.year);
+                                formattedDate = dateObject.toLocaleDateString("en-GB")
+                                }
+                                
+                                return <div>{formattedDate}</div>;
+                            },
                             getProps: (state, rowInfo, column) => {
                                 return {
                                     style: {
@@ -386,11 +458,11 @@ function Publications2() {
                                     },
                                 };
                             },
-                            //minWidth: 420
+                            //minWidth: 140
                         },
                           {  
-                            Header: "Month",
-                            accessor: "month",
+                            Header: PatentsKey.abstract,
+                            accessor: "abstract",
                             //Cell: e =>{e.original.month},
                             getProps: (state, rowInfo, column) => {
                               return {
@@ -403,22 +475,8 @@ function Publications2() {
                         // minWidth: 210
                           },
                         {
-                            Header: "ISSN/ISBN/DOI",
-                            accessor: "doi",
-                            //Cell: e =>{e.original.doi},
-                            getProps: (state, rowInfo, column) => {
-                                return {
-                                    style: {
-                                        color: (rowInfo?.original?.my) ? color : textColor,
-                                        background: rowInfo?.original?.my ? background : "#C3D496",
-                                    },
-                                };
-                            },
-                            minWidth: 140
-                        },
-                        {
-                            Header: () => (<div>Inter/National<br /><input type="text" id="nationality" name="nationality" onKeyPress={(e) => { if (e.key === "Enter") { setGetApi(getApi + 1); setPageNo(1) } }} onChange={(e) => { setNationalityFilterValue(e.target.value); }} /></div>),
-                            accessor: "nationality",
+                            Header: () => (<div>{PatentsKey.country}<br /><input type="text" id="nationality" name="nationality" onKeyPress={(e) => { if (e.key === "Enter") { setGetApi(getApi + 1); setPageNo(1) } }} onChange={(e) => { setNationalityFilterValue(e.target.value); }} /></div>),
+                            accessor: "country",
                             //Cell: e =>{e.original.nationality},
                             getProps: (state, rowInfo, column) => {
                                 return {
@@ -430,173 +488,17 @@ function Publications2() {
                             },
                             minWidth: 140
                         },
-                        {
-                            Header: "Organizor",
-                            accessor: "organised_by",
-                            //Cell: e =>{e.original.organised_by},
-                            getProps: (state, rowInfo, column) => {
-                                return {
-                                    style: {
-                                        color: (rowInfo?.original?.my) ? color : textColor,
-                                        background: rowInfo?.original?.my ? background : "#A6BE87",
-                                    },
-                                };
-                            },
-                            //minWidth: 210
-                        },
-                        {
-                            Header: "In Proceedings",
-                            accessor: "is_proceeding",
-                            //Cell: e =>{e.original.is_proceeding},
-                            getProps: (state, rowInfo, column) => {
-                                return {
-                                    style: {
-                                        color: (rowInfo?.original?.my) ? color : textColor,
-                                        background: rowInfo?.original?.my ? background : "#C3D496",
-                                    },
-                                };
-                            },
-                            //minWidth: 140
-                        },
-                        {
-                            Header: "Abstract Published",
-                            accessor: "is_published",
-                            //Cell: e =>{e.original.is_published},
-                            getProps: (state, rowInfo, column) => {
-                                return {
-                                    style: {
-                                        color: (rowInfo?.original?.my) ? color : textColor,
-                                        background: rowInfo?.original?.my ? background : "#F0F7E6",
-                                    },
-                                };
-                            },
-                            //minWidth: 420
-                        },
-                        {
-                            Header: () => (<div>SCI/Scopus/WoS/Others<br /><input type="text" id="problem" name="problem" onKeyPress={(e) => { if (e.key === "Enter") { setGetApi(getApi + 1); setPageNo(1) } }} onChange={(e) => { setScopusFilterValue(e.target.value); }} /></div>),
-                            accessor: "scl",
-                            //Cell: e =>{e.original.scl},
-                            getProps: (state, rowInfo, column) => {
-                                return {
-                                    style: {
-                                        color: (rowInfo?.original?.my) ? color : textColor,
-                                        background: rowInfo?.original?.my ? background : "#A6BE87",
-                                    },
-                                };
-                            },
-                            //minWidth: 210
-                        },
-                        {
-                            Header: "Citation in Scopus/WoS",
-                            accessor: "citation_scopus",
-                            //Cell: e =>{e.original.citation_scopus},
-                            getProps: (state, rowInfo, column) => {
-                                return {
-                                    style: {
-                                        color: (rowInfo?.original?.my) ? color : textColor,
-                                        background: rowInfo?.original?.my ? background : "#C3D496",
-                                    },
-                                };
-                            },
-                            //minWidth: 140
-                        },
-                        {
-                            Header: "Citation in GoogleScholar",
-                            accessor: "citation_google",
-                            //Cell: e =>{e.original.citation_google},
-                            getProps: (state, rowInfo, column) => {
-                                return {
-                                    style: {
-                                        color: (rowInfo?.original?.my) ? color : textColor,
-                                        background: rowInfo?.original?.my ? background : "#F0F7E6",
-                                    },
-                                };
-                            },
-                            //minWidth: 420
-                        },
-                        {
-                            Header: "Link",
-                            accessor: "link",
-                            Cell: e => <a href={e.original.link} color={textColor} target="_blank"> {e.original.link} </a>,
-                            getProps: (state, rowInfo, column) => {
-                                return {
-                                    style: {
-                                        color: (rowInfo?.original?.my) ? color : textColor,
-                                        background: rowInfo?.original?.my ? background : "#A6BE87",
-                                    },
-                                };
-                            },
-                            minWidth: 210
-                        },
-                        {
-                            Header: "Affiliated?",
-                            accessor: "is_affilated",
-                            //Cell: e =>{e.original.is_affilated},
-                            getProps: (state, rowInfo, column) => {
-                                return {
-                                    style: {
-                                        color: (rowInfo?.original?.my) ? color : textColor,
-                                        background: rowInfo?.original?.my ? background : "#C3D496",
-                                    },
-                                };
-                            },
-                            //minWidth: 140
-                        },
-                        {
-                            Header: () => (<div>Author Order<br /><select id="author" onChange={(e) => { setAuthorsFilterValue(e.target.value); setGetApi(getApi + 1); setPageNo(1) }} >{authors.map(verdict => { return (<option value={verdict}> {verdict} </option>) })}</select></div>),
-                            accessor: "author_no",
-                            //Cell: e =>{e.original.author_no},
-
-                            getProps: (state, rowInfo, column) => {
-                                return {
-                                    style: {
-                                        color: (rowInfo?.original?.my) ? color : textColor,
-                                        background: rowInfo?.original?.my ? background : "#F0F7E6",
-                                    },
-                                };
-                            },
-                            //minWidth: 420
-                        },
-                        {
-                            Header: "Page Number",
-                            accessor: "page-number",
-                            Cell: e => <a>{e.original.starting_page + "-" + e.original.ending_page}</a>,
-                            getProps: (state, rowInfo, column) => {
-                                return {
-                                    style: {
-                                        color: (rowInfo?.original?.my) ? color : textColor,
-                                        background: rowInfo?.original?.my ? background : "#A6BE87",
-                                    },
-                                };
-                            },
-                            //minWidth: 210
-                        },
-                        {
-                            Header: "Article Cite",
-                            accessor: "cite",
-                            tipText: e => <a>{e.original.cite}</a>,
-                            //Cell: e =>{e.original.cite},
-                            getProps: (state, rowInfo, column) => {
-                                return {
-                                    style: {
-                                        color: (rowInfo?.original?.my) ? color : textColor,
-                                        background: rowInfo?.original?.my ? background : "#C3D496",
-                                    },
-                                };
-                            },
-                            minWidth: 420
-                        },
                          {
                             Header: <div>Edit /<br/> Delete</div>,
                             id: "admin",
                             accessor: "",
-                            show : isAdmin,
+                            show : isAdmin || isSuperAdmin,
                             Cell: (row) => {
                                 //   console.log(row)
                                 return (
                                     <div className="button-group">
-                                         <p>{isAdmin}</p>
-                                        <HelpModal edit={row.original}/>
+                                         
+                                        <EditPatent edit={row.original} patentNo={titles} />
                                        
                                         <Tooltip arrow title="Delete" placement="top" TransitionComponent={Zoom}>
                                      {/* <ActionIcon onClick={()=>{handleShow()}} size={25} className="button-edit"> */}
@@ -638,4 +540,4 @@ function Publications2() {
         </>
     )};
 }
-export default Publications2;
+export default Patents;

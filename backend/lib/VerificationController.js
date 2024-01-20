@@ -32,7 +32,7 @@ module.exports.Addrequest=async function(req,res){
         var request=await VerifySchema.findOne(req.body)
         if(request==null)
         {request=await VerifySchema.create(req.body)}
-        var a='http://localhost:3000/forgotpassword/'+request.id 
+        var a=process.env.URL_FORGOT+request.id 
         // send link 'a' as email code here
         var s="<h3>Password Reset</h3> <body>The url to reset your password for BVRITH Research Publication Search Engine portal is <br/>"+"<a href="+a+">Click here to change password.</a><br/>The above link expires in 10 minutes<br/></body>"
         var sub="Reset Password - BVRITH Research Publication SE"

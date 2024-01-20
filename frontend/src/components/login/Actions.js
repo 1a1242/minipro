@@ -15,12 +15,21 @@ export const Forgot= ()=>{
         type:'Forgot'
     }
 }
+export const Tab=(page)=>{
+    return{
+        type:'tab',
+        page:page
+    }
+}
 
-export const Signin= (Email,Name)=>{
+export const Signin= (Email,Name,isAdmin,isSuperAdmin,verify)=>{
     return{
         type:'Signin',
         email:Email,
-        user:Name
+        user:Name,
+        isAdmin:isAdmin,
+        isSuperAdmin:isSuperAdmin,
+        verify:verify
     }
 }
 

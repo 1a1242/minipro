@@ -21,8 +21,8 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import { ActionIcon, Center } from "@mantine/core";
 import { Button, Tooltip, Zoom  } from "@mui/material";
-import HomeNavbar from "./RNavbar";
-import Service from "../Service/http";
+import Service from "../../Service/http";
+import {Publication} from "../../Service/keyValueMap";
 import { useNavigate } from "react-router-dom";
 import { IconEdit } from "@tabler/icons-react";
 
@@ -117,7 +117,8 @@ function HelpModal({ edit }) {
     // ,1)
     if (!_.isEqual(body,edit)) {
       // console.log("UPDATE,", body, edit);
-      window.confirm('This will update the publication.')
+      let confirm = window.confirm('This will update the publication.')
+      if(confirm){
       service.post('api/publications/update',body).then((res)=>{
       //   notifications.show({
       //     title: "Updated",
@@ -135,8 +136,11 @@ function HelpModal({ edit }) {
         console.log("ERR",err)
 
       })
+    }else{
+      window.alert("Cancelled the update action."); 
+    }
     } else {
-      window.confirm('Make changes to Update.')
+      window.alert('Make changes to Update.')
         // console.log("DONT UPDATE,", body, edit);
       // console.log("DONT UPDATE", edit.cjb,);
     }
@@ -1020,7 +1024,7 @@ function HelpModal({ edit }) {
                             required
                             id="publication"
                             name="publication"
-                            label="Publication Name"
+                            label={Publication.title}
                             fullWidth
                             variant="standard"
                             defaultValue={edit.title}
@@ -1032,7 +1036,7 @@ function HelpModal({ edit }) {
                             required
                             id="authors"
                             name="authors"
-                            label="Authors Name"
+                            label={Publication.username}
                             fullWidth
                             variant="standard"
                             defaultValue={edit.username}
@@ -1047,7 +1051,7 @@ function HelpModal({ edit }) {
                                 sx={{ minWidth: 120 }}
                               >
                                 <InputLabel id="demo-simple-select-standard-label">
-                                  C/J/B/BC
+                                  {Publication.cjb}
                                 </InputLabel>
                                 <Select
                                   labelId="c/j/b/bc"
@@ -1074,7 +1078,7 @@ function HelpModal({ edit }) {
                                 sx={{ minWidth: 120 }}
                               >
                                 <InputLabel id="demo-simple-select-standard-label">
-                                  Branch
+                                  {Publication.branch}
                                 </InputLabel>
                                 <Select
                                   labelId="branch"
@@ -1102,7 +1106,7 @@ function HelpModal({ edit }) {
                                 sx={{ minWidth: 120 }}
                               >
                                 <InputLabel id="demo-simple-select-standard-label">
-                                  Inter/National
+                                  {Publication.nationality}
                                 </InputLabel>
                                 <Select
                                   labelId="nationality"
@@ -1131,7 +1135,7 @@ function HelpModal({ edit }) {
                             required
                             id="name_c-j-b"
                             name="name_c-j-b"
-                            label="Name of C/J/B/BC"
+                            label={Publication.name_cjb}
                             fullWidth
                             variant="standard"
                             defaultValue={edit.name_cjb}
@@ -1143,7 +1147,7 @@ function HelpModal({ edit }) {
                             required
                             id="issn"
                             name="issn"
-                            label="ISSN/ISBN/DOI"
+                            label={Publication.doi}
                             fullWidth
                             variant="standard"
                             defaultValue={edit.doi}
@@ -1155,7 +1159,7 @@ function HelpModal({ edit }) {
                             required
                             id="article-cite"
                             name="article-cite"
-                            label="Cite Article"
+                            label={Publication.cite}
                             fullWidth
                             variant="standard"
                             defaultValue={edit.cite}
@@ -1168,7 +1172,7 @@ function HelpModal({ edit }) {
                             //required
                             id="organizer"
                             name="organizer"
-                            label="Organizer"
+                            label={Publication.organised_by}
                             fullWidth
                             variant="standard"
                             color="secondary"
@@ -1181,7 +1185,7 @@ function HelpModal({ edit }) {
                             required
                             id="link"
                             name="link"
-                            label="Link"
+                            label={Publication.link}
                             fullWidth
                             variant="standard"
                             color="secondary"
@@ -1196,7 +1200,7 @@ function HelpModal({ edit }) {
                                 //required
                                 id="vol"
                                 name="vol"
-                                label="Volume"
+                                label={Publication.vol}
                                 fullWidth
                                 variant="standard"
                                 color="secondary"
@@ -1211,7 +1215,7 @@ function HelpModal({ edit }) {
                                 //required
                                 id="issue"
                                 name="issue"
-                                label="Issue"
+                                label={Publication.issue}
                                 fullWidth
                                 variant="standard"
                                 color="secondary"
@@ -1234,7 +1238,7 @@ function HelpModal({ edit }) {
                                 sx={{ minWidth: 80 }}
                               >
                                 <InputLabel id="demo-simple-select-standard-label">
-                                  Year
+                                  {Publication.year}
                                 </InputLabel>
                                 <Select
                                   labelId="year"
@@ -1278,7 +1282,7 @@ function HelpModal({ edit }) {
                                 sx={{ minWidth: 80 }}
                               >
                                 <InputLabel id="demo-simple-select-standard-label">
-                                  Month
+                                  {Publication.month}
                                 </InputLabel>
                                 <Select
                                   labelId="month"
@@ -1328,7 +1332,7 @@ function HelpModal({ edit }) {
                                   id="demo-simple-select-standard-label"
                                   color="secondary"
                                 >
-                                  In Proceedings?
+                                  {Publication.is_proceeding}
                                 </InputLabel>
                                 <Select
                                   labelId="proceedings"
@@ -1358,7 +1362,7 @@ function HelpModal({ edit }) {
                                   id="demo-simple-select-standard-label"
                                   color="secondary"
                                 >
-                                  Abstract Published?
+                                  {Publication.is_published}
                                 </InputLabel>
                                 <Select
                                   labelId="published"
@@ -1383,7 +1387,7 @@ function HelpModal({ edit }) {
                                 sx={{ minWidth: 120 }}
                               >
                                 <InputLabel color="secondary">
-                                  Affiliated?
+                                  {Publication.is_affilated}
                                 </InputLabel>
                                 <Select
                                   labelId="affiliated"
@@ -1415,7 +1419,7 @@ function HelpModal({ edit }) {
                                   id="demo-simple-select-standard-label"
                                   color="secondary"
                                 >
-                                  Author Order
+                                  {Publication.author_no}
                                 </InputLabel>
                                 <Select
                                   labelId="author_no"
@@ -1476,7 +1480,7 @@ function HelpModal({ edit }) {
                                 required
                                 id="scopus"
                                 name="scopus"
-                                label="SCI/Scopus/WoS/Others"
+                                label={Publication.scl}
                                 fullWidth
                                 variant="standard"
                                 color="secondary"
@@ -1490,7 +1494,7 @@ function HelpModal({ edit }) {
                                 // required
                                 id="citationscopus"
                                 name="citationscopus"
-                                label="Citation in Scopus/WoS"
+                                label={Publication.citation_scopus}
                                 fullWidth
                                 variant="standard"
                                 color="secondary"
@@ -1503,7 +1507,7 @@ function HelpModal({ edit }) {
                                 // required
                                 id="citationgoogle"
                                 name="citationgoogle"
-                                label="Citation in GoogleScholar"
+                                label={Publication.citation_google}
                                 fullWidth
                                 variant="standard"
                                 color="secondary"

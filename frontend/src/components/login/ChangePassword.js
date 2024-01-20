@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import './Comp.css'
+import '../Comp.css'
 import {PasswordInput } from "@mantine/core";
 import { sha512 } from "js-sha512";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
-import Service from "../Service/http";
+import Service from "../../Service/http";
+import { useSelector } from "react-redux";
 function Changepass(){
     const service = new Service();
     const [old,setOld]=useState('')
@@ -12,11 +13,13 @@ function Changepass(){
     const [confirm,setConfirm]=useState('')
     const validPassword = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})');
     const navigate=useNavigate()
+    const email = useSelector((state)=>state.Email);
+    const loggedIn = useSelector((state)=>state.logged);
     // console.log("CHANGEPASS")
     useEffect(()=>{
-        const a = localStorage.getItem('status')==='true'?true:false;
+        
         // console.log("useeffect",a)
-        if(!a){
+        if(!loggedIn){
             // console.log("in IF")
             navigate("../")
         }
@@ -79,7 +82,6 @@ function Changepass(){
                    {/* <center> */}
                    <Button variant="contained" color='secondary' onClick={async ()=>{
                         var pass=sha512(old)
-                        var email=localStorage.getItem('Email')
                         service.post('userlogin',{Email:email,Password:pass})
                         .then((res)=>{
                             // console.log(res)

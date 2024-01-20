@@ -11,41 +11,42 @@ import {
 
 from 'mdb-react-ui-kit';
 import HomeNavbar from "./RNavbar";
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { Notifications, showNotification } from '@mantine/notifications';
-import image from './static/hompage.jpg'
-import logo from './static/bvrit-logo.jpg'
-import Reset from './Reset';
-import { Center } from '@mantine/core';
+import Footer from './Footer';
+import { Tab } from './login/Actions';
+
 
 function Home() {
-  const login=useSelector(state=>state.Login)
+  // const login=useSelector(state=>state.Login)
+  const loggedIn = useSelector((state)=>state.logged);
+  const verify = useSelector((state)=>state.verify);
+  const dispatch=useDispatch();
+
     const navigate = useNavigate();
     useEffect(()=>{
-    var a=localStorage.getItem('status')
-    var b=localStorage.getItem('Verify')
-    if(a==='false'){
-        navigate("../")}
-    else if(b=='false'){
+      dispatch(Tab('home'));
+      console.log("LOGGED IN",loggedIn,verify)
+   
+    if(loggedIn && !verify){
       navigate("../verify")
     }
     })
   
-  if(localStorage.getItem('status')==='true'){
+  // if(loggedIn){
   return (
     <>
     <HomeNavbar/>
     
-    <div class="col d-flex justify-content-center" style={{height: "90vh",
+    <div class="col d-flex justify-content-center" style={{height: "79.5vh",
         width: "100vw",
-      "backgroundColor":"#c5d299", paddingTop:"90px"}}>
-
-      <MDBCard style={{ maxHeight: '390px', maxWidth: '900px'}}>
+      "backgroundColor":"#c5d299", paddingTop:"35px"}}>
+      <MDBCard style={{ maxHeight: '450px', maxWidth: '1200px'}}>
         <MDBRow className='g-0'>
 
           <MDBCol md='8'>
-          <MDBCardImage src={require('./static/hompage.jpg')} fluid />
+          <MDBCardImage style={{height:'450px',width:'800px'}}src={require('./static/hompage.jpg')} fluid />
           </MDBCol>
 
           <MDBCol md='4' >
@@ -79,9 +80,10 @@ function Home() {
                 </div>
             </div>
         </div> */}
+      {/* <Footer/> */}
     </>
   
-  )};}
+  )};
 
 
 export default Home;
