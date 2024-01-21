@@ -34,9 +34,6 @@ app.use(express.static(path.join(__dirname, '../frontend/build')));
 // Define your API routes or other backend logic here
 
 // Send the React app for any other requests
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
-});
 // app.get('/api/publications', dbLib.getData);
 // app.post('/api/data', dbLib.postData)
 // app.post('/api/edit')
@@ -52,10 +49,13 @@ app.post('/forgotpassword',jsonParser,Verify.ForgotPassword)
 app.post('/newpassword',jsonParser,Verify.NewPassword)
 app.post('/verifyemail',jsonParser,Register.VerifyEmail)
 // app.get('/message', (req, res) => {
-//     res.json({ message: "Hello from server!" });
-// });
-
-app.listen(process.env.PORT, () => {
+  //     res.json({ message: "Hello from server!" });
+  // });
+  
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+  });
+  app.listen(process.env.PORT, () => {
     console.log(`Server is running on port .`+process.env.PORT);
   });
   
