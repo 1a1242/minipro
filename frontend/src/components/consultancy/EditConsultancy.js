@@ -22,7 +22,7 @@ import {Departments, ConsultancyKey} from "../../Service/keyValueMap";
 
 import { IconEdit } from "@tabler/icons-react";
 import { DateInput } from "@mantine/dates";
-import { Modal,MultiSelect,TextInput, Group} from "@mantine/core";
+import { Modal,MultiSelect,TextInput, Group, Select} from "@mantine/core";
 function EditConsultancy({ edit, titles }) {
   const service = new Service();
   const yearpre = new Date();
@@ -33,6 +33,8 @@ function EditConsultancy({ edit, titles }) {
   const formRef = React.useRef();
   const patentRef = React.useRef(null)
   const multiSelectRef = React.useRef(null);
+  const designRef = React.useRef(null)
+
 
 //   const [design,setDesign] = useState(edit.year)
 //   const [monthvalue, setMonthValue] = useState(edit.month);
@@ -52,6 +54,7 @@ function EditConsultancy({ edit, titles }) {
     if (!_.isEqual(body,edit)) {
         patentRef.current.setCustomValidity(body.title!=edit.title && containsIgnoreCase(titles,body.title)?"Title Already exist":"")
         multiSelectRef.current.setCustomValidity(cjb.length===0?"Please Select a Value.":"")
+        designRef.current.setCustomValidity((ngo==="")?"Please Select A Value.":"")
       if(formRef.current.reportValidity()){
        
           
@@ -81,6 +84,8 @@ function EditConsultancy({ edit, titles }) {
 const handleShow = () => {setShow(true);};
 // const navigate = useNavigate();
 const [body,setBody] = useState(edit)
+const [ngo, setNGO] = useState(edit.ngo);
+
 
 
  
@@ -114,6 +119,20 @@ const [body,setBody] = useState(edit)
 //  setAffiliated(edit.is_affilated);
 //  setAuthorNo(edit.author_no);
   },[edit])
+  const handleChangeDesign = (event) => {
+    setNGO(event)
+    setBody({
+      _id: edit._id,
+      __v: edit.__v,
+      title : body.title,
+      industry: body.industry,
+      ngo : event,
+      pi : body.pi,
+      co_pi  : body.co_pi,
+      dept : body.dept,
+      amount : body.amount,
+        });
+  }
   const handleChangeDept = (event) => {
    
     setCjb(event);
@@ -254,7 +273,7 @@ const [body,setBody] = useState(edit)
                         <TextInput
                         styles={{"label": {"color": "#6C9449","text-align":"left"}}}
                         style={{"text-align":"left"}}
-                        label={ConsultancyKey.pi}
+                        label={ConsultancyKey.pi+'  (Add multiple authors seperated by ",")'}
                         defaultValue={edit.pi}
                         id="authors"
                         placeholder={ConsultancyKey.pi}
@@ -266,7 +285,7 @@ const [body,setBody] = useState(edit)
                         <TextInput
                         styles={{"label": {"color": "#6C9449","text-align":"left"}}}
                         style={{"text-align":"left"}}
-                        label={ConsultancyKey.co_pi}
+                        label={ConsultancyKey.co_pi+'  (Add multiple authors seperated by ",")'}
                         defaultValue={edit.co_pi}
                         id="co_authors"
                         placeholder={ConsultancyKey.co_pi}
@@ -300,17 +319,19 @@ const [body,setBody] = useState(edit)
                           </MDBCol>
 
                           <MDBCol md="6">
-                            <TextInput
-                            styles={{"label": {"color": "white","text-align":"left"}}}
-                            style={{"text-align":"left"}}
-                            label={ConsultancyKey.ngo}
-                            placeholder="Enter NGO"
-                            onChange={(event)=>{handleChange(event)}}
-                            id="ngo"
-                            defaultValue={edit.ngo}
-                            withAsterisk
-                            required
-                            />
+                          <Select 
+                               ref={designRef}
+                              styles={{"label": {"color": "white","text-align":"left"}}}
+                              style={{"text-align":"left"}} 
+                              withAsterisk 
+                              placeholder="Select One"
+                              label={ConsultancyKey.ngo} 
+                              searchable 
+                              // maxValues={2}
+                              id = "ngo"
+                              data={["Private","Public","NGO"]} 
+                              value={body.ngo} 
+                              onChange={(e)=>{handleChangeDesign(e)}} />
                           </MDBCol>
                         </MDBRow>
                         <br/>

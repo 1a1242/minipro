@@ -351,7 +351,7 @@ const handleChangeDept = (event) => {
                           <TextInput
                         styles={{"label": {"color": "#6C9449","text-align":"left"}}}
                         style={{"text-align":"left"}}
-                        label={PatentsKey.authors}
+                        label={PatentsKey.authors+'  (Add multiple authors seperated by ",")'}
                         id="authors"
                         placeholder={PatentsKey.authors}
                         defaultValue={edit.authors}

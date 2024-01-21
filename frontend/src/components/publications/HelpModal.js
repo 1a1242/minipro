@@ -1036,7 +1036,7 @@ function HelpModal({ edit }) {
                             required
                             id="authors"
                             name="authors"
-                            label={Publication.username}
+                            label={Publication.username+'  (Add multiple authors seperated by ",")'}
                             fullWidth
                             variant="standard"
                             defaultValue={edit.username}

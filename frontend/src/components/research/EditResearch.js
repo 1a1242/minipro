@@ -15,14 +15,14 @@ import {
 // import HomeNavbar from "../RNavbar";
 // import Modal from "react-bootstrap/Modal";
 
-import { Button, Tooltip, Zoom  } from "@mui/material";
+import { Button, Tooltip, Zoom, duration  } from "@mui/material";
 
 import Service from "../../Service/http";
 import {Departments, ResearchKey} from "../../Service/keyValueMap";
 
 import { IconEdit } from "@tabler/icons-react";
 import { DateInput } from "@mantine/dates";
-import { Modal,MultiSelect,TextInput, Group} from "@mantine/core";
+import { Modal,MultiSelect,TextInput, Group, Select, NumberInput} from "@mantine/core";
 function EditResearch({ edit, titles }) {
   const service = new Service();
   const yearpre = new Date();
@@ -33,15 +33,19 @@ function EditResearch({ edit, titles }) {
   const formRef = React.useRef();
   const multiSelectRef = React.useRef(null);
   const designRef = React.useRef(null)
+  const durationRef = React.useRef(null)
   const patentRef = React.useRef(null)
 
   const [design,setDesign] = useState(edit.year)
+  const [duration,setDuration] = useState(edit.duration);
+
 //   const [monthvalue, setMonthValue] = useState(edit.month);
   const [cjb, setCjb] = useState(edit.dept);
 //   const [titles, setTitles] = useState(patentNo);
 //   const [branch, setBranch] = useState(edit.branch);
  
  
+const [body,setBody] = useState(edit)
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleUpdate = () => {
@@ -49,6 +53,7 @@ function EditResearch({ edit, titles }) {
     if (!_.isEqual(body,edit)) {
         patentRef.current.setCustomValidity(body.title!=edit.title && titles.includes(body.title)?"Title Already exist":"")
         multiSelectRef.current.setCustomValidity(cjb.length===0?"Please Select a Value.":"")
+        durationRef.current.setCustomValidity(duration===""?"Please Enter Duration.":"")
         designRef.current.setCustomValidity((design.length===0)?"Please Select A Value.":"")
       if(formRef.current.reportValidity()){
        
@@ -78,7 +83,6 @@ function EditResearch({ edit, titles }) {
 };
 const handleShow = () => {setShow(true);};
 // const navigate = useNavigate();
-const [body,setBody] = useState(edit)
 
 const handleChangeDept = (event) => {
    
@@ -92,7 +96,8 @@ const handleChangeDept = (event) => {
             dept : event,
             amount : body.amount,
             scheme : body.scheme,
-            year : body.year
+            year : body.year,
+            duration:body.duration
           });
   };
   const handleChangeDesign = (event) => {
@@ -107,10 +112,26 @@ const handleChangeDept = (event) => {
         dept : body.dept,
         amount : body.amount,
         scheme : body.scheme,
-        year : event
+        year : event,
+        duration:body.duration
+
       });
   };
- 
+  const handleDuration = (event) => {
+    setDuration(event);
+    setBody({
+      _id: edit._id,
+      __v: edit.__v,
+      title : body.title,
+      pi : body.pi,
+      co_pi  : body.co_pi,
+      dept : body.dept,
+      amount : body.amount,
+      scheme : body.scheme,
+      year : body.year,
+      duration : event
+    });
+  };
   
  
   const onSubmit = (event) => {
@@ -154,7 +175,9 @@ const handleChangeDept = (event) => {
         dept : body.dept,
         amount : body.amount,
         scheme : body.scheme,
-        year : body.year
+        year : body.year,
+        duration:body.duration
+
       });
     } else if (e.currentTarget.id === "authors") {
       // body.username = e.target.value
@@ -167,7 +190,9 @@ const handleChangeDept = (event) => {
         dept : body.dept,
         amount : body.amount,
         scheme : body.scheme,
-        year : body.year
+        year : body.year,
+        duration:body.duration
+
       });    } else if (e.currentTarget.id === "co_authors") {
       // body.name_cjb = e.target.value
       setBody({
@@ -179,7 +204,9 @@ const handleChangeDept = (event) => {
         dept : body.dept,
         amount : body.amount,
         scheme : body.scheme,
-        year : body.year
+        year : body.year,
+        duration:body.duration
+
       });
     } else if (e.currentTarget.id === "amount") {
       // body.vol = e.target.value
@@ -192,7 +219,9 @@ const handleChangeDept = (event) => {
         dept : body.dept,
         amount : e.currentTarget.value,
         scheme : body.scheme,
-        year : body.year
+        year : body.year,
+        duration:body.duration
+
       });
     } else{
         setBody({
@@ -204,7 +233,9 @@ const handleChangeDept = (event) => {
             dept : body.dept,
             amount : body.amount,
             scheme : e.currentTarget.value,
-            year : body.year
+            year : body.year,
+            duration:body.duration
+
           });
     } 
    
@@ -254,7 +285,7 @@ const handleChangeDept = (event) => {
                         <TextInput
                         styles={{"label": {"color": "#6C9449","text-align":"left"}}}
                         style={{"text-align":"left"}}
-                        label={ResearchKey.pi}
+                        label={ResearchKey.pi+'  (Add multiple authors seperated by ",")'}
                         defaultValue={edit.pi}
                         id="authors"
                         placeholder={ResearchKey.pi}
@@ -266,7 +297,7 @@ const handleChangeDept = (event) => {
                         <TextInput
                         styles={{"label": {"color": "#6C9449","text-align":"left"}}}
                         style={{"text-align":"left"}}
-                        label={ResearchKey.co_pi}
+                        label={ResearchKey.co_pi+' (Add multiple authors seperated by ",")'}
                         defaultValue={edit.co_pi}
                         id="co_authors"
                         placeholder={ResearchKey.co_pi}
@@ -279,7 +310,41 @@ const handleChangeDept = (event) => {
                         <MDBCol md="6" className="bg-indigo p-5">
                         <MDBRow>
                           <MDBCol md="6">
-                              <MultiSelect 
+                          <Select 
+                               ref={designRef}
+                              styles={{"label": {"color": "white","text-align":"left"}}}
+                              style={{"text-align":"left"}} 
+                              withAsterisk 
+                              placeholder="Select One"
+                              label={ResearchKey.year} 
+                              searchable 
+                              // maxValues={2}
+                              id = "year"
+                              data={years} 
+                              value={body.year} 
+                              onChange={(e)=>{handleChangeDesign(e)}} />
+                         
+                          </MDBCol>
+                          <MDBCol md="6">
+                          <NumberInput 
+                               ref={durationRef}
+                              styles={{"label": {"color": "white","text-align":"left"}}}
+                              style={{"text-align":"left"}} 
+                              withAsterisk 
+                              placeholder={"Enter Duration"}
+                              label={ResearchKey.duration} 
+                              id = "duration"
+                              value={body.duration} 
+                              onChange={(e)=>{handleDuration(e)}} />
+                            </MDBCol>
+                              
+                                
+                            {/* </FormControl> */}
+                          
+                          </MDBRow>
+                          <MDBRow>
+                          <MDBCol md="6">
+                          <MultiSelect 
                             //   zIndex={1010}
                               ref={multiSelectRef}
                               styles={{"label": {"color": "white","text-align":"left"}}}
@@ -295,29 +360,10 @@ const handleChangeDept = (event) => {
                               data={Departments} 
                               //   value={cjb} 
                               onChange={(e)=>{handleChangeDept(e)}} />
-                                
-                            {/* </FormControl> */}
+                         
                           </MDBCol>
-
                           <MDBCol md="6">
-                          <MultiSelect 
-                               ref={designRef}
-                               styles={{"label": {"color": "white","text-align":"left"}}}
-                               style={{"text-align":"left"}} 
-                               withAsterisk 
-                              placeholder={design.length==0?"Select At least One":"Type to search"}
-                              label={ResearchKey.year} 
-                              searchable 
-                              maxValues={2}
-                              value={edit.year}
-                              id = "year"
-                              data={years} 
-                              //   value={cjb} 
-                              onChange={(e)=>{handleChangeDesign(e)}} />
-                          </MDBCol>
-                        </MDBRow>
-                        <br />
-                        <TextInput
+                          <TextInput
                         styles={{"label": {"color": "white","text-align":"left"}}}
                         style={{"text-align":"left"}}
                         label={ResearchKey.amount}
@@ -328,6 +374,8 @@ const handleChangeDept = (event) => {
                         defaultValue={edit.amount}
                         required
                         />
+                          </MDBCol>
+                        </MDBRow>
                         <br/>
                         <TextInput
                         styles={{"label": {"color": "white","text-align":"left"}}}
