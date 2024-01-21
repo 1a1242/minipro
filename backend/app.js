@@ -29,13 +29,13 @@ app.use('/api/patents',patentsRouter)
 app.use('/api/research',researchRouter)
 app.use('/api/consultancy',consultancyRouter)
 
-app.use(express.static(path.join(__dirname, './frontend/build')));
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 // Define your API routes or other backend logic here
 
 // Send the React app for any other requests
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, './frontend/build', 'index.html'));
+  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
 });
 // app.get('/api/publications', dbLib.getData);
 // app.post('/api/data', dbLib.postData)
