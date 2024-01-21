@@ -6,7 +6,7 @@ module.exports.Addrequest=async function(req,res){
         var request=await RegisterSchema.findOne({Email:req.body.Email})
         if(request==null)
         {request=await RegisterSchema.create(req.body)}
-        var a='http://localhost:3000/verifyemail/'+request.id 
+        var a= process.env.URL_VERIFY+request.id 
         // send link 'a' as email code here
        var s= "<h3>Verify your Email</h3> <body>The url to verify your email for BVRITH Research Publication Search Engine portal is <br/>"+"<a href="+a+">Clickk here to Register.</a></body>"
        var sub='Verify your Email - BVRITH Research Publication SE' 
