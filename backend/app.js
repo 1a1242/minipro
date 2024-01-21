@@ -55,7 +55,8 @@ app.post('/verifyemail',jsonParser,Register.VerifyEmail)
 app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
   });
-  app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port .`+process.env.PORT);
+  const PORT = process.env.PORT || 8000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port .`+PORT);
   });
   
