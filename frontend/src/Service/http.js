@@ -11,7 +11,7 @@ function joinURL(baseURL, url){
 class Service {
 
     constructor(){
-        this.domain = process.env.BACKEND_URL;
+        this.domain = process.env.REACT_APP_BACKEND_URL;
     }
 
     request(url,method="POST",data=null){
