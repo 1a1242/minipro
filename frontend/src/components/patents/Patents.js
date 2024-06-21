@@ -18,7 +18,7 @@ import { IconEdit, IconTrash } from '@tabler/icons-react'
 import { Portal } from "react-overlays";
 // import Modal from 'react-bootstrap/Modal';
 import HelpModal from "../publications/HelpModal";
-import { Center, Group, Modal, MultiSelect } from "@mantine/core";
+import { Center, Group, Modal, Select } from "@mantine/core";
 import { useDispatch, useSelector } from "react-redux";
 import { PatentsKey, Publication } from "../../Service/keyValueMap";
 import EditPatent from "./EditPatent";
@@ -202,7 +202,7 @@ function Patents() {
                             </MDBCol>
                         </MDBRow>
                         <br />
-                        <MultiSelect 
+                        <Select 
                             //    ref={multiSelectRef}
                               styles={{"label": {"color": "white","text-align":"left"}}}
                               style={{"text-align":"left"}} 
@@ -211,11 +211,10 @@ function Patents() {
                               label={PatentsKey.dept} 
                               searchable 
                               id = "dept"
-                              maxValues={1}
-                              defaultValue={["filed"]}
                               data={[ { value: 'filed', label: PatentsKey.filed },  { value: 'published', label: PatentsKey.published },  { value: 'grant', label: PatentsKey.year }]} 
-                            //   value={cjb} 
-                              onChange={(e)=>{setAdvance(e)}} />
+                              value={advance}
+                              onChange={(e)=>{setAdvance(e);
+                              }} />
                               <br/>
                               <Group justify="center">
                         <Button variant="contained" color="primary" onClick={() => { (startDate !== "" && endDate !== "") ? handleSearch() : setRequired(true) }}>

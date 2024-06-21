@@ -89,7 +89,7 @@ function FirstData() {
   const [is_proceedings, setProceedings] = useState("");
   const [is_published, setPublished] = useState("");
   const [is_affilated, setAffiliated] = useState("");
-  const [author_no, setAuthorNo] = useState("");
+  const [author_no, setAuthorNo] = useState([]);
   const [titles, setTitles] = useState([]);
   const [send, setSend] = useState(0);
   const [show, setShow] = useState(false);
@@ -1368,9 +1368,10 @@ function FirstData() {
                                 onChange={handleChangeAuthorNo}
                                 label="Author Order"
                                 color="secondary"
+                                multiple
                                 // required
                               >
-                                <MenuItem value="">
+                                <MenuItem value={""}>
                                   <em>None</em>
                                 </MenuItem>
                                 <MenuItem value={"Single"}>Single</MenuItem>
