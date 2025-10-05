@@ -47,11 +47,11 @@ module.exports.Addrequest=async function(req,res){
 module.exports.ForgotPassword=async function(req,res){
     try{
         const request=await VerifySchema.findById({_id:req.body.id.id})
-        console.log(request)
+        // console.log(request)
         res.status(200).json(request)
     }
     catch(e){
-        console.log(e)
+        // console.log(e)
         res.status(404)
     }
 }

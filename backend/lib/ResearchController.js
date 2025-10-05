@@ -28,7 +28,7 @@ module.exports.getTitles = async function(req,res){
             return res.status(200).json(names)
         })
     }catch(error){
-        console.log("ERROR",error)
+        // console.log("ERROR",error)
         return res.status(500).json(error)
     }
 }
@@ -37,11 +37,11 @@ module.exports.bulkUpload = async function(req,res){
         const object = req.body;
         let result1 = [];
        for (const key in object) {
-        console.log("year",object[key].year)
+        // console.log("year",object[key].year)
         object[key].year = object[key].year ? new Date(object[key].year) : null;
         object[key].filed = new Date(object[key].filed)
         object[key].published = object[key].published ? new Date(object[key].published) : null;
-           console.log("year",object[key].year)
+        //    console.log("year",object[key].year)
            
            dataModal.create(object[key],function(err,result){
                if(err) throw err;
@@ -51,7 +51,7 @@ module.exports.bulkUpload = async function(req,res){
         return res.status(200).json(result1)
     }
     catch(error){
-        console.log("ERROR",error)
+        // console.log("ERROR",error)
         return res.status(500).json(error)
     }
 }
@@ -84,7 +84,7 @@ module.exports.editData = async function(req,res){
 
 module.exports.getData = async function (req, res) {
     try{
-        console.log("IN GETDATA1",req.query);
+        // console.log("IN GETDATA1",req.query);
         let title = req.query.title || ""
         let branch = req.query.branch || ""
         let user = req.query.authors || ""
@@ -106,7 +106,7 @@ module.exports.getData = async function (req, res) {
             query["title"]= { $regex: '.*' + title + '.*', "$options" : "i" }
         }
         if (branch!=""){
-            console.log("IN BRANCH")
+            // console.log("IN BRANCH")
             query["dept"] = { $regex: '.*' + branch + '.*', "$options" : "i" }
         }
         if (user!=""){
@@ -124,13 +124,13 @@ module.exports.getData = async function (req, res) {
             query["scheme"] ={ $regex: '.*' + scheme + '.*', "$options" : "i"}
         }
         
-        console.log("WHERE",query)
+        // console.log("WHERE",query)
         if(limit==='0'){
             dataModal.paginate(query,{page:page,limit:0},function(err,result) {
                 if (err) res.status(500).send(err);
                 else{
                     limit=result.total
-                    console.log("Result",result)
+                    // console.log("Result",result)
 
                 // ...
                 // res.json(result)
@@ -142,7 +142,7 @@ module.exports.getData = async function (req, res) {
         dataModal.paginate(query,{page:page,limit:limit},function(err,result) {
             if (err) {console.log(err);res.status(500).send(err)}
             else{
-                console.log("Result        ",result)
+                // console.log("Result        ",result)
             // ...
             return res.status(200).json(result)
             // console.log("RESULT", result)
